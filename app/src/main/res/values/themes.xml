@@ -23,4 +23,9 @@
         <item name="colorSecondary">@color/lime</item>
     </style>
 
+    <style name="AppTheme.Launcher">
+        <!-- Show launch_screen while the app is loading -->
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+    </style>
+
 </resources>
