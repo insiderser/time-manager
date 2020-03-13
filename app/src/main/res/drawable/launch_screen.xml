@@ -14,16 +14,15 @@
   ~ limitations under the License.
   -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.MainActivity">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+        android:opacity="opaque">
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Hello World!" />
+    <!-- The background color -->
+    <item android:drawable="?attr/colorSurface" />
 
-</FrameLayout>
+    <!-- Launcher icon -->
+    <item
+            android:drawable="@mipmap/ic_launcher"
+            android:gravity="center" />
+
+</layer-list>

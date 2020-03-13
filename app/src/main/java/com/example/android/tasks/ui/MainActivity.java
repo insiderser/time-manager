@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package com.example.android.tasks;
+package com.example.android.tasks.ui;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.android.tasks.R;
 
 public class MainActivity extends AppCompatActivity {
 
