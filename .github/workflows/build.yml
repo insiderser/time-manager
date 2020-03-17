@@ -1,13 +1,6 @@
 name: Build
 
-on:
-  pull_request:
-  push:
-    branches:
-      - master
-    paths-ignore:
-      - '.idea/**'
-      - '**.md'
+on: [push, pull_request]
 
 jobs:
   build:
