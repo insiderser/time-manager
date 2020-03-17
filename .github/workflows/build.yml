@@ -26,7 +26,20 @@ jobs:
           key: ${{ runner.os }}-gradledist-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
 
       - name: Build
-        run: ./gradlew app:assembleDebug --no-daemon
+        run: ./gradlew app:lintDebug app:assembleDebug --no-daemon
+
+      - name: Copy lint reports
+        if: always()
+        run: |
+          mkdir -p lint
+          find ./app/build/reports -type f -name "lint*" -exec cp {} lint/ \;
+
+      - name: Upload lint reports
+        if: always()
+        uses: actions/upload-artifact@v1
+        with:
+          name: lint
+          path: lint
 
       - name: Upload debug APK
         uses: actions/upload-artifact@v1
