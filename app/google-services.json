@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "395150042188",
+    "firebase_url": "https://time-manager-d4658.firebaseio.com",
+    "project_id": "time-manager-d4658",
+    "storage_bucket": "time-manager-d4658.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:395150042188:android:2fd8b2781200a01821c0e9",
+        "android_client_info": {
+          "package_name": "com.example.android.tasks"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "395150042188-khupnm143klpk1pq0m4fr5m5o63fm0s3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.android.tasks",
+            "certificate_hash": "82f595c6eb7ad7db131f53e689136100adb596c6"
+          }
+        },
+        {
+          "client_id": "395150042188-vjmnn1gh9fb74qu66nsni4fnq7plvm63.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaTFE6I_JF_2UzR2aZYGWgxKcsxMz7vVU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "395150042188-vjmnn1gh9fb74qu66nsni4fnq7plvm63.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
