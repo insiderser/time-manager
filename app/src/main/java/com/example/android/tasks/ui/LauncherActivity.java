@@ -18,13 +18,13 @@ package com.example.android.tasks.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * An {@link AppCompatActivity activity} that either redirects user to {@link MainActivity} if the
- * user is signed in, or to {@code SignInActivity} otherwise.
+ * user is signed in, or to {@link LoginActivity} otherwise.
  */
 public class LauncherActivity extends AppCompatActivity {
 
@@ -32,8 +32,13 @@ public class LauncherActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // TODO if user isn't signed in, navigate to sign in screen.
-        Intent intent = new Intent(this, MainActivity.class);
+        boolean isUserSignedIn = FirebaseAuth.getInstance().getCurrentUser() != null;
+        Intent intent;
+        if (isUserSignedIn) {
+            intent = new Intent(this, MainActivity.class);
+        } else {
+            intent = new Intent(this, LoginActivity.class);
+        }
         startActivity(intent);
         // Remove LauncherActivity from the back stack.
         // We don't want users to navigate to this screen.
