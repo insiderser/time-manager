@@ -7,11 +7,12 @@ android {
 
     defaultConfig {
         applicationId "com.example.android.tasks"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
+        multiDexEnabled true
         signingConfig signingConfigs.debug
 
         javaCompileOptions {
