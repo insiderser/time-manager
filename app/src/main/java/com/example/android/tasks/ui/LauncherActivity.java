@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import com.example.android.tasks.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 /**
