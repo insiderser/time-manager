@@ -14,4 +14,7 @@
     <string name="login_failed">Authentication Failed</string>
     <string name="user_already_exists">User with this email already exists</string>
     <string name="user_does_not_exist">User with this email does not exist</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="unknown_failure_password_reset">Password reset failed</string>
+    <string name="password_reset_email_sent">Password reset instructions were sent to your email</string>
 </resources>

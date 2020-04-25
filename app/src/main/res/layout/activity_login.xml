@@ -78,8 +78,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            app:layout_constraintBottom_toTopOf="@id/sign_up_btn"
+            app:layout_constraintBottom_toTopOf="@id/forgot_password_btn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/email_input_layout"
@@ -94,6 +93,17 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
+            android:id="@+id/forgot_password_btn"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/forgot_password"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toTopOf="@id/sign_up_btn"
+            app:layout_constraintTop_toBottomOf="@id/password_input_layout"
+            app:layout_constraintStart_toStartOf="@id/password_input_layout" />
+
+        <Button
             android:id="@+id/sign_up_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -104,7 +114,7 @@
             app:layout_constraintEnd_toStartOf="@id/sign_in_btn"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/password_input_layout"
+            app:layout_constraintTop_toBottomOf="@id/forgot_password_btn"
             app:layout_constraintVertical_chainStyle="packed" />
 
         <Button
