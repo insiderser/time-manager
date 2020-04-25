@@ -5,7 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.android.tasks.login.LoginActivity;
-import com.example.android.tasks.utils.FirebaseUserLiveData;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 /**
@@ -27,17 +27,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FirebaseUserLiveData userLiveData = new FirebaseUserLiveData();
-        userLiveData.observe(this, this::onUserChanged);
+        checkUserIsSignedIn();
     }
 
-    /**
-     * Will be invoked every time a user account has been changed.
-     * Default implementation navigates to {@link LoginActivity} if the user isn't signed in
-     * (e.g. {@code newUser == null}).
-     */
-    protected void onUserChanged(@Nullable FirebaseUser newUser) {
-        if (newUser == null) {
+    private void checkUserIsSignedIn() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+
+        if (currentUser == null) {
             navigateToLoginScreen();
         }
     }
