@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import com.example.android.tasks.R;
 import com.example.android.tasks.ui.MainActivity;
+import com.example.android.tasks.utils.FirebaseUserLiveData;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -25,6 +26,8 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputEditText passwordEditText;
 
     private View rootView;
+
+    private FirebaseUserLiveData userLiveData;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +56,13 @@ public class LoginActivity extends AppCompatActivity {
 
         emailSignUpButton.setOnClickListener(v -> {
             tryEmailSignIn(true);
+        });
+
+        userLiveData = new FirebaseUserLiveData();
+        userLiveData.observe(this, firebaseUser -> {
+            if (firebaseUser != null) {
+                navigateToMainActivity();
+            }
         });
     }
 
@@ -94,10 +104,6 @@ public class LoginActivity extends AppCompatActivity {
     private void handleAuthStatus(LiveData<SignInStatus> statusLiveData) {
         statusLiveData.observe(this, signInStatus -> {
             switch (signInStatus) {
-                case SUCCESS:
-                    navigateToMainActivity();
-                    break;
-
                 case USER_CANCELLED:
                     // Ignore.
                     break;
