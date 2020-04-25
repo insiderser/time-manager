@@ -84,13 +84,13 @@ final class GoogleSignInUseCase {
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
 
         firebaseAuth.signInWithCredential(credential)
-            .addOnCompleteListener(authTask -> {
-                if (authTask.isSuccessful()) {
+            .addOnCompleteListener(result -> {
+                if (result.isSuccessful()) {
                     assert firebaseAuth.getCurrentUser() != null;
                     signInStatusLiveData.setValue(SignInStatus.SUCCESS);
                 } else {
                     // If sign in fails, display a message to the user.
-                    Exception exception = authTask.getException();
+                    Exception exception = result.getException();
                     Log.w(TAG, "Sign in with credentials failed", exception);
 
                     signInStatusLiveData.setValue(SignInStatus.UNKNOWN_ERROR);

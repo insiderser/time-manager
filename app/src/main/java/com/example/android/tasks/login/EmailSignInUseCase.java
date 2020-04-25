@@ -33,13 +33,13 @@ final class EmailSignInUseCase {
     private LiveData<SignInStatus> getStatusOfAuthTask(Task<AuthResult> authTask) {
         MutableLiveData<SignInStatus> signInStatusLiveData = new MutableLiveData<>();
 
-        authTask.addOnCompleteListener(resultTask -> {
-            if (resultTask.isSuccessful()) {
+        authTask.addOnCompleteListener(result -> {
+            if (result.isSuccessful()) {
                 assert firebaseAuth.getCurrentUser() != null;
                 Log.d(TAG, "Sign in successful");
                 signInStatusLiveData.setValue(SignInStatus.SUCCESS);
             } else {
-                Exception exception = resultTask.getException();
+                Exception exception = result.getException();
                 Log.w(TAG, "Sign in failed.", exception);
 
                 SignInStatus signInStatus;
@@ -74,14 +74,14 @@ final class EmailSignInUseCase {
         MutableLiveData<PasswordResetStatus> statusLiveData = new MutableLiveData<>();
 
         firebaseAuth.sendPasswordResetEmail(email)
-            .addOnCompleteListener(resultTask -> {
-                if (resultTask.isSuccessful()) {
+            .addOnCompleteListener(result -> {
+                if (result.isSuccessful()) {
                     Log.d(TAG, "Password reset email sent.");
 
                     PasswordResetStatus status = PasswordResetStatus.SUCCESS;
                     statusLiveData.setValue(status);
                 } else {
-                    Exception e = resultTask.getException();
+                    Exception e = result.getException();
                     Log.w(TAG, "Failed to send password reset email.", e);
 
                     PasswordResetStatus status;
