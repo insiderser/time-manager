@@ -66,4 +66,35 @@ final class EmailSignInUseCase {
 
         return signInStatusLiveData;
     }
+
+    /**
+     * Sends password reset email to given address if a user with given email is already registered.
+     */
+    LiveData<PasswordResetStatus> resetPassword(String email) {
+        MutableLiveData<PasswordResetStatus> statusLiveData = new MutableLiveData<>();
+
+        firebaseAuth.sendPasswordResetEmail(email)
+            .addOnCompleteListener(resultTask -> {
+                if (resultTask.isSuccessful()) {
+                    Log.d(TAG, "Password reset email sent.");
+
+                    PasswordResetStatus status = PasswordResetStatus.SUCCESS;
+                    statusLiveData.setValue(status);
+                } else {
+                    Exception e = resultTask.getException();
+                    Log.w(TAG, "Failed to send password reset email.", e);
+
+                    PasswordResetStatus status;
+                    if (e instanceof FirebaseAuthInvalidUserException) {
+                        status = PasswordResetStatus.USER_DOES_NOT_EXIST;
+                    } else {
+                        status = PasswordResetStatus.UNKNOWN_FAILURE;
+                    }
+
+                    statusLiveData.setValue(status);
+                }
+            });
+
+        return statusLiveData;
+    }
 }

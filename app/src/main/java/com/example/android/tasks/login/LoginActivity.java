@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
@@ -37,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.email_edit_text);
         passwordEditText = findViewById(R.id.password_edit_text);
         rootView = findViewById(R.id.root_layout);
+        Button forgotPasswordView = findViewById(R.id.forgot_password_btn);
 
         SignInButton googleSignInButton = findViewById(R.id.google_sign_in);
         Button emailSignInButton = findViewById(R.id.sign_in_btn);
@@ -53,6 +55,10 @@ public class LoginActivity extends AppCompatActivity {
 
         emailSignUpButton.setOnClickListener(v -> {
             tryEmailSignIn(true);
+        });
+
+        forgotPasswordView.setOnClickListener(v -> {
+            resetPassword();
         });
 
         FirebaseUserLiveData userLiveData = new FirebaseUserLiveData();
@@ -87,6 +93,17 @@ public class LoginActivity extends AppCompatActivity {
     private void resetEmailAndPasswordErrors() {
         emailEditText.setError(null);
         passwordEditText.setError(null);
+    }
+
+    private void resetPassword() {
+        CharSequence emailSequence = emailEditText.getText();
+
+        if (!TextUtils.isEmpty(emailSequence)) {
+            String email = emailSequence.toString();
+
+            LiveData<PasswordResetStatus> resetPasswordStatusLiveData = emailSignInUseCase.resetPassword(email);
+            handlePasswordResetStatus(resetPasswordStatusLiveData);
+        }
     }
 
     @Override
@@ -128,6 +145,28 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private void handlePasswordResetStatus(@NonNull LiveData<PasswordResetStatus> liveData) {
+        liveData.observe(this, status -> {
+            switch (status) {
+                case SUCCESS:
+                    showPasswordResetEmailSent();
+                    break;
+
+                case USER_DOES_NOT_EXIST:
+                    showUserDoesNotExist();
+                    break;
+
+                case UNKNOWN_FAILURE:
+                    showUnknownFailurePasswordResetSnackbar();
+            }
+        });
+    }
+
+    private void showPasswordResetEmailSent() {
+        Snackbar snackbar = Snackbar.make(rootView, R.string.password_reset_email_sent, Snackbar.LENGTH_SHORT);
+        snackbar.show();
+    }
+
     private void showInvalidCredentialsError() {
         Snackbar snackbar = Snackbar.make(rootView, R.string.invalid_credentials, Snackbar.LENGTH_SHORT);
         snackbar.show();
@@ -154,6 +193,11 @@ public class LoginActivity extends AppCompatActivity {
 
     private void showUnknownFailureSnackbar() {
         Snackbar snackbar = Snackbar.make(rootView, R.string.login_failed, Snackbar.LENGTH_SHORT);
+        snackbar.show();
+    }
+
+    private void showUnknownFailurePasswordResetSnackbar() {
+        Snackbar snackbar = Snackbar.make(rootView, R.string.unknown_failure_password_reset, Snackbar.LENGTH_SHORT);
         snackbar.show();
     }
 
