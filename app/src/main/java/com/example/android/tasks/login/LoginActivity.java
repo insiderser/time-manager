@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseUserLiveData userLiveData = new FirebaseUserLiveData();
         userLiveData.observe(this, firebaseUser -> {
             if (firebaseUser != null) {
-                // The user is signed in. Return back to normal flow.
+                // The user is signed in. Return to normal flow.
                 finish();
             }
         });
