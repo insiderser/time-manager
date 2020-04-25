@@ -18,15 +18,6 @@ final class EmailSignInUseCase {
 
     private static final String TAG = EmailSignInUseCase.class.getSimpleName();
 
-    private static final EmailSignInUseCase INSTANCE = new EmailSignInUseCase();
-
-    static EmailSignInUseCase getInstance() {
-        return INSTANCE;
-    }
-
-    private EmailSignInUseCase() {
-    }
-
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
     LiveData<SignInStatus> trySignIn(String email, String password) {

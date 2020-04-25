@@ -24,23 +24,11 @@ import com.google.firebase.auth.GoogleAuthProvider;
 final class GoogleSignInUseCase {
 
     private static final String TAG = GoogleSignInUseCase.class.getSimpleName();
-    private static final Object LOCK = new Object();
-
-    private static GoogleSignInUseCase instance = null;
-
-    static GoogleSignInUseCase getInstance(Context context) {
-        synchronized (LOCK) {
-            if (instance == null) {
-                instance = new GoogleSignInUseCase(context.getApplicationContext());
-            }
-            return instance;
-        }
-    }
 
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    private GoogleSignInClient googleSignInClient;
+    private final GoogleSignInClient googleSignInClient;
 
-    private GoogleSignInUseCase(Context context) {
+    GoogleSignInUseCase(Context context) {
         String clientId = context.getString(R.string.default_web_client_id);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder()
             .requestIdToken(clientId)

@@ -31,8 +31,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        googleSignInUseCase = GoogleSignInUseCase.getInstance(getApplicationContext());
-        emailSignInUseCase = EmailSignInUseCase.getInstance();
+        googleSignInUseCase = new GoogleSignInUseCase(this);
+        emailSignInUseCase = new EmailSignInUseCase();
 
         emailEditText = findViewById(R.id.email_edit_text);
         passwordEditText = findViewById(R.id.password_edit_text);
