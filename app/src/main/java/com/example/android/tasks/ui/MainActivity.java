@@ -17,15 +17,15 @@
 package com.example.android.tasks.ui;
 
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.android.tasks.R;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // This changes AppTheme.Launcher theme to AppTheme.
+        // Must be called before super.onCreate(…).
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }

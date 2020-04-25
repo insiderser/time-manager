@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import com.example.android.tasks.R;
-import com.example.android.tasks.ui.MainActivity;
 import com.example.android.tasks.utils.FirebaseUserLiveData;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -26,8 +25,6 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputEditText passwordEditText;
 
     private View rootView;
-
-    private FirebaseUserLiveData userLiveData;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,10 +55,11 @@ public class LoginActivity extends AppCompatActivity {
             tryEmailSignIn(true);
         });
 
-        userLiveData = new FirebaseUserLiveData();
+        FirebaseUserLiveData userLiveData = new FirebaseUserLiveData();
         userLiveData.observe(this, firebaseUser -> {
             if (firebaseUser != null) {
-                navigateToMainActivity();
+                // The user is signed in. Return back to normal flow.
+                finish();
             }
         });
     }
@@ -125,15 +123,9 @@ public class LoginActivity extends AppCompatActivity {
                     break;
 
                 case UNKNOWN_ERROR:
-                    showFailureSnackbar();
+                    showUnknownFailureSnackbar();
             }
         });
-    }
-
-    private void navigateToMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     private void showInvalidCredentialsError() {
@@ -160,8 +152,15 @@ public class LoginActivity extends AppCompatActivity {
         snackbar.show();
     }
 
-    private void showFailureSnackbar() {
+    private void showUnknownFailureSnackbar() {
         Snackbar snackbar = Snackbar.make(rootView, R.string.login_failed, Snackbar.LENGTH_LONG);
         snackbar.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Put this app to the background.
+        // We don't want not-signed-in users to navigate back to whatever screen they were on.
+        moveTaskToBack(true);
     }
 }
