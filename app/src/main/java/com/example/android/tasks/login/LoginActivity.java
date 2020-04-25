@@ -129,7 +129,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showInvalidCredentialsError() {
-        Snackbar snackbar = Snackbar.make(rootView, R.string.invalid_credentials, Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(rootView, R.string.invalid_credentials, Snackbar.LENGTH_SHORT);
         snackbar.show();
     }
 
@@ -139,21 +139,21 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showUserAlreadyExists() {
-        Snackbar snackbar = Snackbar.make(rootView, R.string.user_already_exists, Snackbar.LENGTH_LONG)
+        Snackbar snackbar = Snackbar.make(rootView, R.string.user_already_exists, Snackbar.LENGTH_SHORT)
             .setAction(R.string.sign_in, v -> tryEmailSignIn(false));
 
         snackbar.show();
     }
 
     private void showUserDoesNotExist() {
-        Snackbar snackbar = Snackbar.make(rootView, R.string.user_does_not_exist, Snackbar.LENGTH_LONG)
+        Snackbar snackbar = Snackbar.make(rootView, R.string.user_does_not_exist, Snackbar.LENGTH_SHORT)
             .setAction(R.string.sign_up, v -> tryEmailSignIn(true));
 
         snackbar.show();
     }
 
     private void showUnknownFailureSnackbar() {
-        Snackbar snackbar = Snackbar.make(rootView, R.string.login_failed, Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(rootView, R.string.login_failed, Snackbar.LENGTH_SHORT);
         snackbar.show();
     }
 
