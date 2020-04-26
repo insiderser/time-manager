@@ -17,4 +17,5 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="unknown_failure_password_reset">Password reset failed</string>
     <string name="password_reset_email_sent">Password reset instructions were sent to your email</string>
+    <string name="task_dots">Image of dots</string>
 </resources>

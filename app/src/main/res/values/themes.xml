@@ -27,5 +27,13 @@
         <!-- Show launch_screen while the app is loading -->
         <item name="android:windowBackground">@drawable/launch_screen</item>
     </style>
+    
+    <style name="TaskTitlePrimary">
+        <item name="android:textSize">24sp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">left|center</item>
+        <item name="android:textColor">@color/white</item>
+
+    </style>
 
 </resources>

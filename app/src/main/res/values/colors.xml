@@ -17,4 +17,6 @@
 <resources>
     <color name="blue">#2962FF</color>
     <color name="lime">#EEFF41</color>
+    <color name="black">#323232</color>
+    <color name="white">#FFFFFF</color>
 </resources>
