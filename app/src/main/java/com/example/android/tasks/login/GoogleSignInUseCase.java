@@ -21,6 +21,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 /**
  * Use case that manages Google Sign-in process.
  */
+@SuppressWarnings("JavadocReference")
 final class GoogleSignInUseCase {
 
     private static final String TAG = GoogleSignInUseCase.class.getSimpleName();
