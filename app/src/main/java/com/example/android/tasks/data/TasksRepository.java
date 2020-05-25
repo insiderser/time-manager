@@ -14,6 +14,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.internal.api.FirebaseNoSignedInUserException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -98,10 +99,9 @@ public class TasksRepository {
 
         query.addSnapshotListener((snapshot, e) -> {
             if (snapshot != null) {
-                List<DocumentSnapshot> documents = snapshot.getDocuments();
-                List<Task> tasks = new ArrayList<>(documents.size());
+                List<Task> tasks = new ArrayList<>(snapshot.size());
 
-                for (DocumentSnapshot document : documents) {
+                for (DocumentSnapshot document : snapshot) {
                     Task task = getTask(document);
                     tasks.add(task);
                 }
@@ -181,10 +181,9 @@ public class TasksRepository {
 
         query.addSnapshotListener((snapshot, e) -> {
             if (snapshot != null) {
-                List<DocumentSnapshot> documents = snapshot.getDocuments();
-                List<SubTask> subTasks = new ArrayList<>(documents.size());
+                List<SubTask> subTasks = new ArrayList<>(snapshot.size());
 
-                for (DocumentSnapshot document : documents) {
+                for (DocumentSnapshot document : snapshot) {
                     SubTask subTask = getSubTask(document);
                     subTasks.add(subTask);
                 }
@@ -210,15 +209,51 @@ public class TasksRepository {
     }
 
     /**
+     * Updates or (if not already) inserts given task and its subtasks into Firestore.
+     * <p>
+     * To let Firestore auto generate IDs for elements, set their IDs to {@code null}.
+     * <p>
+     * Why use this? Because if you try to insert a subtask for a task that doesn't exist yet,
+     * you will get {@code PERMISSION_DENIED} error.
+     *
+     * @return ID of the task. If {@link Task#getId()} was null, new ID will be generated;
+     * otherwise this will be same as {@link Task#getId()}.
+     * @see #insertOrUpdateTask(Task)
+     * @see #insertOrUpdateSubTask(SubTask, String)
+     */
+    @NonNull
+    public String insertOrUpdateTask(
+        @NonNull Task task,
+        @NonNull Iterable<SubTask> subTasks
+    ) throws FirebaseNoSignedInUserException {
+        String taskId = insertOrUpdateTask(task);
+
+        for (SubTask subTask : subTasks) {
+            insertOrUpdateSubTask(subTask, taskId);
+        }
+
+        return taskId;
+    }
+
+    /**
      * Updates or (if not already) inserts given task into Firestore.
      * <p>
      * To let Firestore auto generate ID for the task, set task's ID to {@code null}.
+     *
+     * @return ID of the task. If {@link Task#getId()} was null, new ID will be generated;
+     * otherwise this will be same as {@link Task#getId()}.
+     * @see #insertOrUpdateTask(Task, Iterable)
+     * @see #insertOrUpdateSubTask(SubTask, String)
      */
-    public void addOrUpdateTask(@NonNull Task task) {
+    @NonNull
+    public String insertOrUpdateTask(@NonNull Task task) throws FirebaseNoSignedInUserException {
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        assert currentUser != null;
+        if (currentUser == null) {
+            Log.e(TAG, "User isn't signed in.");
+            throw new FirebaseNoSignedInUserException("User isn't signed in.");
+        }
 
-        int numberOfFields = 4;
+        int numberOfFields = 5;
         Map<String, Object> fields = new HashMap<>(numberOfFields);
         fields.put("title", task.getTitle());
         fields.put("description", task.getDescription());
@@ -229,15 +264,24 @@ public class TasksRepository {
         CollectionReference tasksCollection = firestore.collection("tasks");
         String taskId = task.getId();
 
-        addOrUpdateInternal(tasksCollection, fields, taskId);
+        return insertOrUpdate(tasksCollection, fields, taskId);
     }
 
     /**
      * Updates or (if not already) inserts given subtask into Firestore.
      * <p>
      * To let Firestore auto generate ID for the task, set task's ID to {@code null}.
+     * <p>
+     * <b>Be careful!</b> If you try to insert a subtask for a task that doesn't exist yet,
+     * you will get {@code PERMISSION_DENIED} error.
+     *
+     * @return ID of the subtask. If {@link SubTask#getId()} was null, new ID will be generated;
+     * otherwise this will be same as {@link SubTask#getId()}.
+     * @see #insertOrUpdateTask(Task)
+     * @see #insertOrUpdateTask(Task, Iterable)
      */
-    public void addOrUpdateSubTask(@NonNull SubTask subTask, @NonNull String parentTaskId) {
+    @NonNull
+    public String insertOrUpdateSubTask(@NonNull SubTask subTask, @NonNull String parentTaskId) {
         int numberOfFields = 2;
         Map<String, Object> fields = new HashMap<>(numberOfFields);
         fields.put("title", subTask.getTitle());
@@ -248,33 +292,44 @@ public class TasksRepository {
             .collection("subtasks");
         String subTaskId = subTask.getId();
 
-        addOrUpdateInternal(subTasksCollection, fields, subTaskId);
+        return insertOrUpdate(subTasksCollection, fields, subTaskId);
     }
 
-    private void addOrUpdateInternal(
+    /**
+     * Updates or (if not already) inserts a document into Firestore.
+     *
+     * @return ID of the item. If parameter documentId was null, it will be autogenerated; otherwise, same as
+     * documentId.
+     */
+    private String insertOrUpdate(
         CollectionReference parentCollection,
         Map<String, Object> fields,
         @Nullable String documentId
     ) {
-        DocumentReference newSubTaskReference;
+        DocumentReference documentReference;
         if (documentId != null) {
-            // This subTask is already in the database. Update it.
-            newSubTaskReference = parentCollection.document(documentId);
+            // This document is already in the database. Update it.
+            documentReference = parentCollection.document(documentId);
         } else {
-            // This will create a new document for the subTask, automatically generating ID.
-            newSubTaskReference = parentCollection.document();
+            // This will create a new document, automatically generating ID.
+            documentReference = parentCollection.document();
         }
 
-        newSubTaskReference.set(fields)
+        String newDocumentId = documentReference.getId();
+
+        documentReference.set(fields)
             .addOnCompleteListener(result -> {
                 String action = documentId != null ? "update" : "insert";
+                String documentType = parentCollection.getId();
 
                 if (result.isSuccessful()) {
-                    Log.d(TAG, action + " task successful");
+                    Log.d(TAG, String.format("%s %s successful ", action, documentType));
                 } else {
                     Exception e = result.getException();
-                    Log.w(TAG, "Failed to " + action + " task", e);
+                    Log.w(TAG, String.format("Failed to %s %s", action, documentType), e);
                 }
             });
+
+        return newDocumentId;
     }
 }
