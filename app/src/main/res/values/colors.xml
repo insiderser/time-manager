@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <color name="blue">#2962FF</color>
-    <color name="lime">#EEFF41</color>
     <color name="black">#323232</color>
     <color name="white">#FFFFFF</color>
     <color name="orange">#FF8C00</color>
