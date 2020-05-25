@@ -21,7 +21,7 @@
         android:layout_weight="8"
         android:layout_height="match_parent"
         style="@style/TaskTitlePrimary"
-        android:text="Hello"/>
+        tools:text="Hello" />
 
     <ImageView
         android:id="@+id/task_dots"
