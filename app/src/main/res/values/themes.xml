@@ -10,12 +10,10 @@
         <item name="actionBarStyle">@style/Widget.MaterialComponents.ActionBar.Primary</item>
     </style>
 
-    <style name="AppThemeNoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorPrimary">@color/orange</item>
-        <item name="colorPrimaryDark">@color/black</item>
-        <item name="colorSecondary">@color/orange</item>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
-
 
     <style name="AppTheme.Launcher">
         <!-- Show launch_screen while the app is loading -->

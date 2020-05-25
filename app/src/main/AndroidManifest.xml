@@ -23,9 +23,10 @@
         </activity>
 
         <activity android:name=".login.LoginActivity" />
-        <activity android:name=".ui.TaskActivity"
-            android:theme="@style/AppThemeNoActionBar"
-            android:parentActivityName=".ui.MainActivity"/>
+        <activity
+            android:name=".ui.TaskActivity"
+            android:parentActivityName=".ui.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
     </application>
 </manifest>
