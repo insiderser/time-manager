@@ -18,6 +18,12 @@ import java.util.List;
 
 public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHolder> {
     private List<Task> tasksList = new ArrayList<>();
+    private OnTaskListener onTaskListener;
+
+    public TasksAdapter(List<Task> tasksList, OnTaskListener onTaskListener) {
+        this.tasksList = tasksList;
+        this.onTaskListener = onTaskListener;
+    }
 
     @NonNull
     @Override
@@ -25,7 +31,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         int layoutId = R.layout.task_item_view;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(layoutId, parent, false);
-        return new TaskViewHolder(view);
+        return new TaskViewHolder(view, onTaskListener);
     }
 
     @Override
@@ -38,15 +44,19 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         return tasksList.size();
     }
 
-    class TaskViewHolder extends RecyclerView.ViewHolder {
+    class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView titleView;
         CheckBox checkBox;
+        OnTaskListener onTaskListener;
 
-        public TaskViewHolder (View itemView){
+        public TaskViewHolder (View itemView, OnTaskListener onTaskListener){
             super(itemView);
 
             titleView = itemView.findViewById(R.id.task_title);
             checkBox = itemView.findViewById(R.id.task_checkbox);
+            this.onTaskListener = onTaskListener;
+
+            itemView.setOnClickListener(this);
         }
 
         void bind(Task task){
@@ -54,6 +64,14 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             checkBox.setActivated(task.isCompleted());
         }
 
+        @Override
+        public void onClick(View v) {
+            onTaskListener.onTaskClick(getAdapterPosition());
+        }
+    }
+
+    public interface OnTaskListener{
+        void onTaskClick(int position);
     }
 
     public void setItems(Collection<Task> tasks){
