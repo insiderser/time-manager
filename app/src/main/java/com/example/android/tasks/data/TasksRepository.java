@@ -99,10 +99,9 @@ public class TasksRepository {
 
         query.addSnapshotListener((snapshot, e) -> {
             if (snapshot != null) {
-                List<DocumentSnapshot> documents = snapshot.getDocuments();
-                List<Task> tasks = new ArrayList<>(documents.size());
+                List<Task> tasks = new ArrayList<>(snapshot.size());
 
-                for (DocumentSnapshot document : documents) {
+                for (DocumentSnapshot document : snapshot) {
                     Task task = getTask(document);
                     tasks.add(task);
                 }
@@ -182,10 +181,9 @@ public class TasksRepository {
 
         query.addSnapshotListener((snapshot, e) -> {
             if (snapshot != null) {
-                List<DocumentSnapshot> documents = snapshot.getDocuments();
-                List<SubTask> subTasks = new ArrayList<>(documents.size());
+                List<SubTask> subTasks = new ArrayList<>(snapshot.size());
 
-                for (DocumentSnapshot document : documents) {
+                for (DocumentSnapshot document : snapshot) {
                     SubTask subTask = getSubTask(document);
                     subTasks.add(subTask);
                 }
