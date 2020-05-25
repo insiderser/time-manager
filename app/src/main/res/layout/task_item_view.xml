@@ -42,7 +42,7 @@
         android:layout_weight="1"
         android:layout_height="match_parent"
         android:scaleType="centerInside"
-        android:src="@drawable/descriotion_button"
+        android:src="@drawable/description_button"
         android:contentDescription="@string/task_dots" />
 
 </LinearLayout>
