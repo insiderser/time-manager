@@ -5,23 +5,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.android.tasks.R;
 import com.example.android.tasks.data.Task;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHolder> {
-    private List<Task> tasksList = new ArrayList<>();
-    private OnTaskListener onTaskListener;
 
-    public TasksAdapter(List<Task> tasksList, OnTaskListener onTaskListener) {
-        this.tasksList = tasksList;
+    private final List<Task> tasksList = new ArrayList<>();
+    private final OnTaskListener onTaskListener;
+
+    public TasksAdapter(OnTaskListener onTaskListener) {
         this.onTaskListener = onTaskListener;
     }
 
@@ -44,12 +42,15 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         return tasksList.size();
     }
 
-    class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    static class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
         TextView titleView;
         CheckBox checkBox;
         OnTaskListener onTaskListener;
 
-        public TaskViewHolder (View itemView, OnTaskListener onTaskListener){
+        private Task currentTask = null;
+
+        public TaskViewHolder(View itemView, OnTaskListener onTaskListener) {
             super(itemView);
 
             titleView = itemView.findViewById(R.id.task_title);
@@ -59,24 +60,28 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             itemView.setOnClickListener(this);
         }
 
-        void bind(Task task){
+        void bind(Task task) {
+            currentTask = task;
             titleView.setText(task.getTitle());
             checkBox.setActivated(task.isCompleted());
         }
 
         @Override
         public void onClick(View v) {
-            onTaskListener.onTaskClick(getAdapterPosition());
+            onTaskListener.onTaskClick(currentTask);
         }
     }
 
-    public interface OnTaskListener{
-        void onTaskClick(int position);
+    public interface OnTaskListener {
+
+        void onTaskClick(@NonNull Task task);
     }
 
-    public void setItems(Collection<Task> tasks){
-        tasksList.addAll(tasks);
+    public void setItems(@Nullable Collection<Task> tasks) {
+        tasksList.clear();
+        if (tasks != null) {
+            tasksList.addAll(tasks);
+        }
         notifyDataSetChanged();
     }
-
 }

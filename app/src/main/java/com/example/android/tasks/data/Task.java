@@ -1,8 +1,5 @@
 package com.example.android.tasks.data;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import java.util.Objects;
@@ -16,13 +13,13 @@ import org.threeten.bp.LocalDateTime;
  * Rationale behind this: Firebase counts every fetched field for billing purposes.
  * Fetching every task along with its subtasks would significantly grow our usage.
  */
-public class Task implements Parcelable {
+public class Task {
 
     private final String id;
     private final String title;
     private final String description;
     private final boolean completed;
-    private LocalDateTime deadline;
+    private final LocalDateTime deadline;
 
     public Task(
         @NonNull String title,
@@ -46,38 +43,6 @@ public class Task implements Parcelable {
         this.completed = completed;
         this.deadline = deadline;
     }
-
-    protected Task(Parcel in) {
-        id = in.readString();
-        title = in.readString();
-        description = in.readString();
-        completed = in.readByte() != 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(title);
-        dest.writeString(description);
-        dest.writeByte((byte) (completed ? 1 : 0));
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<Task> CREATOR = new Creator<Task>() {
-        @Override
-        public Task createFromParcel(Parcel in) {
-            return new Task(in);
-        }
-
-        @Override
-        public Task[] newArray(int size) {
-            return new Task[size];
-        }
-    };
 
     /**
      * {@code null} if this Task has not yet been inserted into the database.

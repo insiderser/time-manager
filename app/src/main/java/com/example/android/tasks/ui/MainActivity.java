@@ -18,25 +18,22 @@ package com.example.android.tasks.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.android.tasks.R;
 import com.example.android.tasks.adapter.TasksAdapter;
 import com.example.android.tasks.data.Task;
-
-import org.threeten.bp.LocalDateTime;
-
-import java.util.ArrayList;
-import java.util.Collection;
+import com.example.android.tasks.data.TasksRepository;
+import java.util.List;
 
 public class MainActivity extends BaseActivity implements TasksAdapter.OnTaskListener {
+
     private RecyclerView tasksRecyclerView;
     private TasksAdapter tasksAdapter;
 
-    private ArrayList<Task> tasks = new ArrayList<>();
+    private TasksRepository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,34 +43,29 @@ public class MainActivity extends BaseActivity implements TasksAdapter.OnTaskLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        repository = new TasksRepository();
+
         initRecyclerView();
         loadTasks();
     }
 
-    private void initRecyclerView(){
+    private void initRecyclerView() {
         tasksRecyclerView = findViewById(R.id.tasks_recycle_view);
         tasksRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        tasksAdapter = new TasksAdapter(tasks, this);
+        tasksAdapter = new TasksAdapter(this);
         tasksRecyclerView.setAdapter(tasksAdapter);
     }
 
-    private Collection<Task> addTasks(){
-        tasks.add(new Task("Task 1", "fsa", true, LocalDateTime.now()));
-        tasks.add(new Task("Task 2", "f31fasda", true, LocalDateTime.now()));
-        return tasks;
-    }
-
-    private void loadTasks(){
-        Collection<Task> tasks = addTasks();
-        tasksAdapter.setItems(tasks);
+    private void loadTasks() {
+        LiveData<List<Task>> tasksLiveData = repository.getAllTasksForCurrentUser();
+        tasksLiveData.observe(this, tasksAdapter::setItems);
     }
 
     @Override
-    public void onTaskClick(int position) {
+    public void onTaskClick(@NonNull Task task) {
         Intent intent = new Intent(this, TaskActivity.class);
-
-        intent.putExtra("selected_task", tasks.get(position));
+        intent.putExtra(TaskActivity.EXTRA_TASK_ID, task.getId());
         startActivity(intent);
     }
 }

@@ -30,7 +30,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         checkUserIsSignedIn();
     }
 
-    private void checkUserIsSignedIn() {
+    protected void checkUserIsSignedIn() {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
@@ -39,7 +39,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    private void navigateToLoginScreen() {
+    protected void navigateToLoginScreen() {
         Intent loginIntent = new Intent(this, LoginActivity.class);
         startActivity(loginIntent);
     }

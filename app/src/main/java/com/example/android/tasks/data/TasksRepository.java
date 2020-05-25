@@ -14,7 +14,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.internal.api.FirebaseNoSignedInUserException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -222,10 +221,7 @@ public class TasksRepository {
      * @see #insertOrUpdateSubTask(SubTask, String)
      */
     @NonNull
-    public String insertOrUpdateTask(
-        @NonNull Task task,
-        @NonNull Iterable<SubTask> subTasks
-    ) throws FirebaseNoSignedInUserException {
+    public String insertOrUpdateTask(@NonNull Task task, @NonNull Iterable<SubTask> subTasks) {
         String taskId = insertOrUpdateTask(task);
 
         for (SubTask subTask : subTasks) {
@@ -246,12 +242,8 @@ public class TasksRepository {
      * @see #insertOrUpdateSubTask(SubTask, String)
      */
     @NonNull
-    public String insertOrUpdateTask(@NonNull Task task) throws FirebaseNoSignedInUserException {
+    public String insertOrUpdateTask(@NonNull Task task) {
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        if (currentUser == null) {
-            Log.e(TAG, "User isn't signed in.");
-            throw new FirebaseNoSignedInUserException("User isn't signed in.");
-        }
 
         int numberOfFields = 5;
         Map<String, Object> fields = new HashMap<>(numberOfFields);
