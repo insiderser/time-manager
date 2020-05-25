@@ -57,6 +57,11 @@ public class LoginActivity extends AppCompatActivity {
             tryEmailSignIn(true);
         });
 
+        passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
+            tryEmailSignIn(false);
+            return true;
+        });
+
         forgotPasswordView.setOnClickListener(v -> {
             resetPassword();
         });
