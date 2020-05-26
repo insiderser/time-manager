@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/black">
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -12,18 +10,17 @@
 
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/orange" >
-            <include layout="@layout/layout_toolbar"/>
+            android:layout_height="wrap_content">
+
+            <include layout="@layout/layout_toolbar" />
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
-    
+
     <EditText
+        android:id="@+id/task_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/task_text"
-        android:textSize="23sp"
-        android:textColor="@color/white"
-        android:padding="5dp" />
+        android:padding="5dp"
+        android:textSize="23sp" />
 
 </LinearLayout>
