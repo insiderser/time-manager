@@ -15,11 +15,20 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.NoActionBar.TransparentSystemBars">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="AppTheme.Login" parent="AppTheme.NoActionBar.TransparentSystemBars">
+        <item name="android:windowBackground">@drawable/journal_tinted</item>
+    </style>
+
     <style name="AppTheme.Launcher">
         <!-- Show launch_screen while the app is loading -->
         <item name="android:windowBackground">@drawable/launch_screen</item>
     </style>
-    
+
     <style name="TaskTitlePrimary">
         <item name="android:textSize">24sp</item>
         <item name="android:ellipsize">end</item>

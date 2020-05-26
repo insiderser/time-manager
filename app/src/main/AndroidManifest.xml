@@ -22,7 +22,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".login.LoginActivity" />
+        <activity
+            android:name=".login.LoginActivity"
+            android:theme="@style/AppTheme.Login" />
+
         <activity
             android:name=".ui.TaskActivity"
             android:parentActivityName=".ui.MainActivity"

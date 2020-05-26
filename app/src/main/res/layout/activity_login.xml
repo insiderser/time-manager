@@ -15,20 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/background"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:clipToPadding="false"
-            android:scaleType="centerCrop"
-            android:src="@drawable/journal"
-            android:tint="#A000"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription" />
-
         <com.google.android.gms.common.SignInButton
             android:id="@+id/google_sign_in"
             android:layout_width="wrap_content"

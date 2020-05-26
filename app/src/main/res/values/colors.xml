@@ -4,4 +4,6 @@
     <color name="black">#323232</color>
     <color name="white">#FFFFFF</color>
     <color name="orange">#FF8C00</color>
+
+    <color name="journal_tint">#A000</color>
 </resources>
