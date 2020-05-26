@@ -7,12 +7,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:scrollbars="vertical">
+    android:scrollbars="vertical"
+    tools:context=".login.LoginActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:scaleType="centerCrop"
+            android:src="@drawable/journal"
+            android:tint="#A000"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/google_sign_in"
@@ -26,24 +41,11 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed" />
 
-        <View
-            android:id="@+id/or_divider_left"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginHorizontal="16dp"
-            android:background="?attr/dividerHorizontal"
-            app:layout_constraintBottom_toBottomOf="@id/or_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/or_text"
-            tools:background="@android:color/darker_gray" />
-
         <TextView
             android:id="@+id/or_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="30dp"
-            android:background="?attr/colorSurface"
             android:paddingHorizontal="6dp"
             android:text="@string/or"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
@@ -101,8 +103,8 @@
             android:text="@string/forgot_password"
             android:textAllCaps="false"
             app:layout_constraintBottom_toTopOf="@id/sign_up_btn"
-            app:layout_constraintTop_toBottomOf="@id/password_input_layout"
-            app:layout_constraintStart_toStartOf="@id/password_input_layout" />
+            app:layout_constraintStart_toStartOf="@id/password_input_layout"
+            app:layout_constraintTop_toBottomOf="@id/password_input_layout" />
 
         <Button
             android:id="@+id/sign_up_btn"
