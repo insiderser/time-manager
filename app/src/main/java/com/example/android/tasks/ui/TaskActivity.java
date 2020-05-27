@@ -1,8 +1,10 @@
 package com.example.android.tasks.ui;
 
 import android.os.Bundle;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import com.example.android.tasks.R;
 import com.example.android.tasks.data.SubTask;
 import com.example.android.tasks.data.Task;
@@ -24,30 +26,50 @@ public class TaskActivity extends BaseActivity {
 
         repository = new TasksRepository();
 
-        if (getIntent().hasExtra(EXTRA_TASK_ID)) {
+        if (savedInstanceState == null && getIntent().hasExtra(EXTRA_TASK_ID)) {
             taskId = getIntent().getStringExtra(EXTRA_TASK_ID);
-
-            LiveData<Task> taskLiveData = repository.getTask(taskId);
-            taskLiveData.observe(this, task -> {
-                if (task != null) {
-                    displayTask(task);
-                }
-            });
-
-            LiveData<List<SubTask>> subtasksLiveData = repository.getSubTasksForTask(taskId);
-            subtasksLiveData.observe(this, subtasks -> {
-                if (subtasks != null) {
-                    displaySubtasks(subtasks);
-                }
-            });
+            fetchTask();
+            fetchSubtasks();
         }
     }
 
-    private void displayTask(Task task) {
+    private void fetchTask() {
+        LiveData<Task> taskLiveData = repository.getTask(taskId);
+        taskLiveData.observe(this, new Observer<Task>() {
+            @Override
+            public void onChanged(Task task) {
+                if (task != null) {
+                    // Make sure we update UI only once,
+                    // so that we don't erase what a user has done.
+                    taskLiveData.removeObserver(this);
+
+                    displayTask(task);
+                }
+            }
+        });
+    }
+
+    private void fetchSubtasks() {
+        LiveData<List<SubTask>> subtasksLiveData = repository.getSubTasksForTask(taskId);
+        subtasksLiveData.observe(this, new Observer<List<SubTask>>() {
+            @Override
+            public void onChanged(List<SubTask> subtasks) {
+                if (subtasks != null) {
+                    // Make sure we update UI only once,
+                    // so that we don't erase what a user has done.
+                    subtasksLiveData.removeObserver(this);
+
+                    displaySubtasks(subtasks);
+                }
+            }
+        });
+    }
+
+    private void displayTask(@NonNull Task task) {
         // TODO
     }
 
-    private void displaySubtasks(List<SubTask> subtasks) {
+    private void displaySubtasks(@NonNull List<SubTask> subtasks) {
         // TODO
     }
 
