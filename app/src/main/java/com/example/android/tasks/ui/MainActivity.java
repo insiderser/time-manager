@@ -20,12 +20,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.android.tasks.R;
 import com.example.android.tasks.adapter.TasksAdapter;
 import com.example.android.tasks.data.Task;
-import com.example.android.tasks.data.TasksRepository;
 import java.util.List;
 
 public class MainActivity extends BaseActivity implements TasksAdapter.OnTaskListener {
@@ -33,7 +33,7 @@ public class MainActivity extends BaseActivity implements TasksAdapter.OnTaskLis
     private RecyclerView tasksRecyclerView;
     private TasksAdapter tasksAdapter;
 
-    private TasksRepository repository;
+    private MainActivityViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class MainActivity extends BaseActivity implements TasksAdapter.OnTaskLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        repository = new TasksRepository();
+        viewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
 
         initRecyclerView();
         loadTasks();
@@ -58,7 +58,7 @@ public class MainActivity extends BaseActivity implements TasksAdapter.OnTaskLis
     }
 
     private void loadTasks() {
-        LiveData<List<Task>> tasksLiveData = repository.getAllTasksForCurrentUser();
+        LiveData<List<Task>> tasksLiveData = viewModel.getTasks();
         tasksLiveData.observe(this, tasksAdapter::setItems);
     }
 
