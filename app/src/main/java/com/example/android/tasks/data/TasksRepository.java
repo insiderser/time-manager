@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.jetbrains.annotations.NotNull;
 import org.threeten.bp.LocalDateTime;
 
 /**
@@ -128,7 +127,7 @@ public class TasksRepository {
         return getTaskInternal(documentReference);
     }
 
-    @NotNull
+    @NonNull
     private LiveData<Task> getTaskInternal(DocumentReference documentReference) {
         MutableLiveData<Task> taskLiveData = new MutableLiveData<>();
 
@@ -174,7 +173,7 @@ public class TasksRepository {
         return getSubTasksInternal(query);
     }
 
-    @NotNull
+    @NonNull
     private LiveData<List<SubTask>> getSubTasksInternal(Query query) {
         MutableLiveData<List<SubTask>> subTasksLiveData = new MutableLiveData<>();
 
