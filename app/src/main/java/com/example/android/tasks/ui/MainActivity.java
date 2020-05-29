@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.android.tasks.R;
 import com.example.android.tasks.adapter.TasksAdapter;
 import com.example.android.tasks.data.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 
 public class MainActivity extends BaseActivity implements TasksAdapter.OnTaskListener {
@@ -31,6 +32,9 @@ public class MainActivity extends BaseActivity implements TasksAdapter.OnTaskLis
 
         initRecyclerView();
         loadTasks();
+
+        FloatingActionButton addTaskButton = findViewById(R.id.add_task_btn);
+        addTaskButton.setOnClickListener(v -> navigateCreateNewTask());
     }
 
     private void initRecyclerView() {
@@ -50,6 +54,11 @@ public class MainActivity extends BaseActivity implements TasksAdapter.OnTaskLis
     public void onTaskClick(@NonNull Task task) {
         Intent intent = new Intent(this, TaskActivity.class);
         intent.putExtra(TaskActivity.EXTRA_TASK_ID, task.getId());
+        startActivity(intent);
+    }
+
+    private void navigateCreateNewTask() {
+        Intent intent = new Intent(this, TaskActivity.class);
         startActivity(intent);
     }
 }
