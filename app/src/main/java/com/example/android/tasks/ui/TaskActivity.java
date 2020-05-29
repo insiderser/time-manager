@@ -13,6 +13,7 @@ import com.example.android.tasks.data.Task;
 import com.example.android.tasks.data.TasksRepository;
 import java.util.Collections;
 import java.util.List;
+import org.threeten.bp.LocalDateTime;
 
 public class TaskActivity extends BaseActivity {
 
@@ -87,9 +88,26 @@ public class TaskActivity extends BaseActivity {
 
     private void saveTask() {
         String taskId = this.taskId;
-        Task task = /*TODO*/ null;
+        String title = titleEditText.getText().toString();
+        String description = descriptionEditText.getText().toString();
+        boolean completed = /*TODO*/ false;
+        LocalDateTime deadline = /*TODO*/ LocalDateTime.now();
+
+        Task task = new Task(taskId, title, description, completed, deadline);
         List<SubTask> subtasks = /*TODO*/ Collections.emptyList();
 
         repository.insertOrUpdateTask(task, subtasks);
+    }
+
+    @Override
+    public void onBackPressed() {
+        saveTask();
+        super.onBackPressed();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        saveTask();
+        return super.onSupportNavigateUp();
     }
 }
