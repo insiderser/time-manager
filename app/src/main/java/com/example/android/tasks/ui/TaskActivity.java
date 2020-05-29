@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import com.example.android.tasks.R;
@@ -32,6 +33,9 @@ public class TaskActivity extends BaseActivity {
 
         titleEditText = findViewById(R.id.task_title);
         descriptionEditText = findViewById(R.id.task_description);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         repository = new TasksRepository();
 
@@ -108,6 +112,7 @@ public class TaskActivity extends BaseActivity {
     @Override
     public boolean onSupportNavigateUp() {
         saveTask();
-        return super.onSupportNavigateUp();
+        finish();
+        return true;
     }
 }

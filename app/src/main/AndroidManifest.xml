@@ -28,7 +28,6 @@
 
         <activity
             android:name=".ui.TaskActivity"
-            android:parentActivityName=".ui.MainActivity"
             android:theme="@style/AppTheme" />
 
     </application>
