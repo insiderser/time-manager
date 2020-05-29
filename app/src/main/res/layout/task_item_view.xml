@@ -6,22 +6,24 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
     android:orientation="horizontal"
-    android:layout_margin="8dp"
     tools:showIn="@layout/activity_main">
 
     <CheckBox
-        android:id="@+id/task_checkbox"
-        android:layout_width="0dp"
-        android:layout_weight="1"
+        android:id="@+id/task_completed"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         android:contentDescription="@string/is_task_completed" />
 
     <TextView
         android:id="@+id/task_title"
-        android:layout_width="0dp"
-        android:layout_weight="8"
-        android:layout_height="match_parent"
         style="@style/TaskTitlePrimary"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:layout_weight="8"
+        android:lines="1"
         tools:text="Hello" />
 
 </LinearLayout>

@@ -45,7 +45,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
     static class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView titleView;
-        CheckBox checkBox;
+        CheckBox completedCheckBox;
         OnTaskListener onTaskListener;
 
         private Task currentTask = null;
@@ -54,7 +54,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             super(itemView);
 
             titleView = itemView.findViewById(R.id.task_title);
-            checkBox = itemView.findViewById(R.id.task_checkbox);
+            completedCheckBox = itemView.findViewById(R.id.task_completed);
             this.onTaskListener = onTaskListener;
 
             itemView.setOnClickListener(this);
@@ -63,7 +63,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         void bind(Task task) {
             currentTask = task;
             titleView.setText(task.getTitle());
-            checkBox.setActivated(task.isCompleted());
+            completedCheckBox.setActivated(task.isCompleted());
         }
 
         @Override
