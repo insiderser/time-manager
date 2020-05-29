@@ -1,5 +1,6 @@
 package com.example.android.tasks.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +18,7 @@ public class TaskActivity extends BaseActivity {
     public static final String EXTRA_TASK_ID = "task_id";
 
     private TasksRepository repository;
-    private String taskId = null;
+    private String taskId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,8 +27,11 @@ public class TaskActivity extends BaseActivity {
 
         repository = new TasksRepository();
 
-        if (savedInstanceState == null && getIntent().hasExtra(EXTRA_TASK_ID)) {
-            taskId = getIntent().getStringExtra(EXTRA_TASK_ID);
+        Intent intent = getIntent();
+        taskId = intent.getStringExtra(EXTRA_TASK_ID);
+
+        boolean editingExistingTask = taskId != null;
+        if (editingExistingTask && savedInstanceState == null) {
             fetchTask();
             fetchSubtasks();
         }
