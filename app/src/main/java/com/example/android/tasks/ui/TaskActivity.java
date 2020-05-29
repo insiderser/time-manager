@@ -2,6 +2,7 @@ package com.example.android.tasks.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
@@ -17,6 +18,9 @@ public class TaskActivity extends BaseActivity {
 
     public static final String EXTRA_TASK_ID = "task_id";
 
+    private EditText titleEditText;
+    private EditText descriptionEditText;
+
     private TasksRepository repository;
     private String taskId;
 
@@ -24,6 +28,9 @@ public class TaskActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
+
+        titleEditText = findViewById(R.id.task_title);
+        descriptionEditText = findViewById(R.id.task_description);
 
         repository = new TasksRepository();
 
@@ -70,7 +77,8 @@ public class TaskActivity extends BaseActivity {
     }
 
     private void displayTask(@NonNull Task task) {
-        // TODO
+        titleEditText.setText(task.getTitle());
+        descriptionEditText.setText(task.getDescription());
     }
 
     private void displaySubtasks(@NonNull List<SubTask> subtasks) {
