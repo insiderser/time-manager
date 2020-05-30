@@ -1,7 +1,10 @@
 package com.example.android.tasks.ui;
 
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.DateFormat;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -14,9 +17,15 @@ import com.example.android.tasks.R;
 import com.example.android.tasks.data.SubTask;
 import com.example.android.tasks.data.Task;
 import com.example.android.tasks.data.TasksRepository;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.CalendarConstraints.Builder;
+import com.google.android.material.datepicker.DateValidatorPointForward;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import java.util.Collections;
 import java.util.List;
+import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.ZoneId;
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.FormatStyle;
 
@@ -44,6 +53,7 @@ public class TaskActivity extends BaseActivity {
         descriptionEditText = findViewById(R.id.task_description);
         completedCheckBox = findViewById(R.id.task_completed_checkbox);
         deadlineTextView = findViewById(R.id.task_deadline);
+        View dateButton = findViewById(R.id.date_button);
 
         completedCheckBox.setOnCheckedChangeListener((checkBox, isChecked) -> {
             if (isChecked) {
@@ -51,6 +61,8 @@ public class TaskActivity extends BaseActivity {
                 finish();
             }
         });
+
+        dateButton.setOnClickListener(v -> chooseDeadline());
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -119,6 +131,38 @@ public class TaskActivity extends BaseActivity {
     private String formatDateTime(@NonNull LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.SHORT);
         return formatter.format(dateTime);
+    }
+
+    private void chooseDeadline() {
+        CalendarConstraints constraints = new Builder()
+            .setValidator(DateValidatorPointForward.now())
+            .build();
+
+        MaterialDatePicker<Long> picker = MaterialDatePicker.Builder.datePicker()
+            .setCalendarConstraints(constraints)
+            .build();
+
+        picker.addOnPositiveButtonClickListener(selection -> {
+            ZoneId utcZone = ZoneId.of("UTC");
+            Instant selectionInstant = Instant.ofEpochMilli(selection);
+            currentDeadline = LocalDateTime.ofInstant(selectionInstant, utcZone);
+
+            chooseDeadlineTime();
+        });
+
+        picker.show(getSupportFragmentManager(), MaterialDatePicker.class.getName());
+    }
+
+    private void chooseDeadlineTime() {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        boolean isSystem24Hour = DateFormat.is24HourFormat(this);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, (view, hourOfDay, minute) -> {
+            currentDeadline = currentDeadline.withHour(hourOfDay).withMinute(minute);
+            displayDeadline();
+        }, currentDateTime.getHour(), currentDateTime.getMinute(), isSystem24Hour);
+
+        timePickerDialog.show();
     }
 
     private void saveTask() {
