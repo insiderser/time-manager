@@ -57,6 +57,13 @@ public class MainActivity extends BaseActivity implements TasksAdapter.OnTaskLis
         startActivity(intent);
     }
 
+    @Override
+    public void onTaskChecked(@NonNull Task task, boolean isChecked) {
+        Task completedTask = new Task(task.getId(), task.getTitle(), task.getDescription(), isChecked,
+            task.getDeadline());
+        viewModel.saveTask(completedTask);
+    }
+
     private void navigateCreateNewTask() {
         Intent intent = new Intent(this, TaskActivity.class);
         startActivity(intent);

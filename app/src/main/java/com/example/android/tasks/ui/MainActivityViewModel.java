@@ -17,4 +17,8 @@ public class MainActivityViewModel extends ViewModel {
     public LiveData<List<Task>> getTasks() {
         return tasks;
     }
+
+    public void saveTask(@NonNull Task task) {
+        repository.insertOrUpdateTask(task);
+    }
 }

@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,7 +43,8 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         return tasksList.size();
     }
 
-    static class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    static class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+        CheckBox.OnCheckedChangeListener {
 
         TextView titleView;
         CheckBox completedCheckBox;
@@ -50,7 +52,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
 
         private Task currentTask = null;
 
-        public TaskViewHolder(View itemView, OnTaskListener onTaskListener) {
+        TaskViewHolder(View itemView, OnTaskListener onTaskListener) {
             super(itemView);
 
             titleView = itemView.findViewById(R.id.task_title);
@@ -58,6 +60,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             this.onTaskListener = onTaskListener;
 
             itemView.setOnClickListener(this);
+            completedCheckBox.setOnCheckedChangeListener(this);
         }
 
         void bind(Task task) {
@@ -70,11 +73,18 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         public void onClick(View v) {
             onTaskListener.onTaskClick(currentTask);
         }
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            onTaskListener.onTaskChecked(currentTask, isChecked);
+        }
     }
 
     public interface OnTaskListener {
 
         void onTaskClick(@NonNull Task task);
+
+        void onTaskChecked(@NonNull Task task, boolean isChecked);
     }
 
     public void setItems(@Nullable Collection<Task> tasks) {
