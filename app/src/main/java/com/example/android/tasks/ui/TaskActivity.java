@@ -126,7 +126,7 @@ public class TaskActivity extends BaseActivity {
         String title = titleEditText.getText().toString();
         String description = descriptionEditText.getText().toString();
         boolean completed = completedCheckBox.isChecked();
-        LocalDateTime deadline = /*TODO*/ LocalDateTime.now();
+        LocalDateTime deadline = currentDeadline;
 
         Task task = new Task(taskId, title, description, completed, deadline);
         List<SubTask> subtasks = /*TODO*/ Collections.emptyList();
