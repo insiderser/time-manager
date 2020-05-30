@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -16,6 +17,8 @@ import com.example.android.tasks.data.TasksRepository;
 import java.util.Collections;
 import java.util.List;
 import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.FormatStyle;
 
 public class TaskActivity extends BaseActivity {
 
@@ -24,9 +27,12 @@ public class TaskActivity extends BaseActivity {
     private EditText titleEditText;
     private EditText descriptionEditText;
     private CheckBox completedCheckBox;
+    private TextView deadlineTextView;
 
     private TasksRepository repository;
+
     private String taskId;
+    private LocalDateTime currentDeadline;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,6 +42,7 @@ public class TaskActivity extends BaseActivity {
         titleEditText = findViewById(R.id.task_title);
         descriptionEditText = findViewById(R.id.task_description);
         completedCheckBox = findViewById(R.id.task_completed_checkbox);
+        deadlineTextView = findViewById(R.id.task_deadline);
 
         completedCheckBox.setOnCheckedChangeListener((checkBox, isChecked) -> {
             if (isChecked) {
@@ -69,6 +76,7 @@ public class TaskActivity extends BaseActivity {
                     // so that we don't erase what a user has done.
                     taskLiveData.removeObserver(this);
 
+                    currentDeadline = task.getDeadline();
                     displayTask(task);
                 }
             }
@@ -95,10 +103,21 @@ public class TaskActivity extends BaseActivity {
         titleEditText.setText(task.getTitle());
         descriptionEditText.setText(task.getDescription());
         completedCheckBox.setChecked(task.isCompleted());
+        displayDeadline();
+    }
+
+    private void displayDeadline() {
+        String formattedDeadline = currentDeadline != null ? formatDateTime(currentDeadline) : "";
+        deadlineTextView.setText(formattedDeadline);
     }
 
     private void displaySubtasks(@NonNull List<SubTask> subtasks) {
         // TODO
+    }
+
+    private String formatDateTime(@NonNull LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.SHORT);
+        return formatter.format(dateTime);
     }
 
     private void saveTask() {

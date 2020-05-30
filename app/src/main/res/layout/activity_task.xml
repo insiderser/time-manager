@@ -8,9 +8,11 @@
     tools:context=".ui.TaskActivity">
 
     <LinearLayout
+        android:id="@+id/date_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:background="?attr/selectableItemBackground"
         android:orientation="horizontal">
 
         <CheckBox
@@ -18,7 +20,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <!-- TODO: deadline -->
+        <TextView
+            android:id="@+id/task_deadline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:lines="1"
+            android:textAppearance="?attr/textAppearanceBody1"
+            tools:text="@tools:sample/date/ddmmyy" />
     </LinearLayout>
 
     <View style="@style/Divider" />
