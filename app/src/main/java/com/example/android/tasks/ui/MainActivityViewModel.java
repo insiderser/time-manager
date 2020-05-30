@@ -18,7 +18,8 @@ public class MainActivityViewModel extends ViewModel {
         return tasks;
     }
 
-    public void saveTask(@NonNull Task task) {
-        repository.insertOrUpdateTask(task);
+    public void deleteTask(@NonNull Task task) {
+        String taskId = task.getId();
+        repository.deleteTask(taskId);
     }
 }

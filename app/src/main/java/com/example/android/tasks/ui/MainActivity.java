@@ -59,9 +59,9 @@ public class MainActivity extends BaseActivity implements TasksAdapter.OnTaskLis
 
     @Override
     public void onTaskChecked(@NonNull Task task, boolean isChecked) {
-        Task completedTask = new Task(task.getId(), task.getTitle(), task.getDescription(), isChecked,
-            task.getDeadline());
-        viewModel.saveTask(completedTask);
+        if (isChecked) {
+            viewModel.deleteTask(task);
+        }
     }
 
     private void navigateCreateNewTask() {
