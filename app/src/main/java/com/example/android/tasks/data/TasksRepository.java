@@ -324,6 +324,15 @@ public class TasksRepository {
         return newDocumentId;
     }
 
+    /**
+     * Deletes task with given ID.
+     */
+    public void deleteTask(String taskId) {
+        firestore.collection(TaskContract.COLLECTION_NAME)
+            .document(taskId)
+            .delete();
+    }
+
     private static final class TaskContract {
 
         static final String COLLECTION_NAME = "tasks";
