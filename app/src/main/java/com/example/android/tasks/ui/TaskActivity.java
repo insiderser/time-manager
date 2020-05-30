@@ -23,6 +23,7 @@ import org.threeten.bp.format.FormatStyle;
 public class TaskActivity extends BaseActivity {
 
     public static final String EXTRA_TASK_ID = "task_id";
+    private static final String KEY_CURRENT_DEADLINE = "current_deadline";
 
     private EditText titleEditText;
     private EditText descriptionEditText;
@@ -150,5 +151,20 @@ public class TaskActivity extends BaseActivity {
         saveTask();
         finish();
         return true;
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putSerializable(KEY_CURRENT_DEADLINE, currentDeadline);
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        currentDeadline = (LocalDateTime) savedInstanceState.getSerializable(KEY_CURRENT_DEADLINE);
+        displayDeadline();
     }
 }
