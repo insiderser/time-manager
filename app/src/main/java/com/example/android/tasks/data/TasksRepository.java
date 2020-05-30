@@ -330,7 +330,15 @@ public class TasksRepository {
     public void deleteTask(String taskId) {
         firestore.collection(TaskContract.COLLECTION_NAME)
             .document(taskId)
-            .delete();
+            .delete()
+            .addOnCompleteListener(result -> {
+                if (result.isSuccessful()) {
+                    Log.d(TAG, "Task successfully deleted.");
+                } else {
+                    Exception e = result.getException();
+                    Log.w(TAG, "Failed to delete task", e);
+                }
+            });
     }
 
     private static final class TaskContract {
