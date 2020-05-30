@@ -27,6 +27,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:lines="1"
+            android:text="@string/choose_deadline"
             android:textAppearance="?attr/textAppearanceBody1"
             tools:text="@tools:sample/date/ddmmyy" />
     </LinearLayout>
