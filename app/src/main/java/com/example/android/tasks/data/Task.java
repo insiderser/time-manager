@@ -22,15 +22,6 @@ public class Task {
     private final LocalDateTime deadline;
 
     public Task(
-        @NonNull String title,
-        @NonNull String description,
-        boolean completed,
-        @NonNull LocalDateTime deadline
-    ) {
-        this(null, title, description, completed, deadline);
-    }
-
-    public Task(
         @Nullable String id,
         @NonNull String title,
         @NonNull String description,
