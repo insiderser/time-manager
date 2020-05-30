@@ -153,7 +153,7 @@ public class TasksRepository {
         boolean completed = taskSnapshot.get(TaskContract.COMPLETED, Boolean.TYPE);
 
         String deadlineTimestamp = taskSnapshot.get(TaskContract.DEADLINE, String.class);
-        LocalDateTime deadline = LocalDateTime.parse(deadlineTimestamp);
+        LocalDateTime deadline = deadlineTimestamp != null ? LocalDateTime.parse(deadlineTimestamp) : null;
 
         return new Task(id, title, description, completed, deadline);
     }
@@ -244,12 +244,16 @@ public class TasksRepository {
     public String insertOrUpdateTask(@NonNull Task task) {
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
+        LocalDateTime deadline = task.getDeadline();
+        String deadlineTimestamp = deadline != null ? deadline.toString() : null;
+
         int numberOfFields = 5;
         Map<String, Object> fields = new HashMap<>(numberOfFields);
+
         fields.put(TaskContract.TITLE, task.getTitle());
         fields.put(TaskContract.DESCRIPTION, task.getDescription());
         fields.put(TaskContract.COMPLETED, task.isCompleted());
-        fields.put(TaskContract.DEADLINE, task.getDeadline().toString());
+        fields.put(TaskContract.DEADLINE, deadlineTimestamp);
         fields.put(TaskContract.USER_UID, currentUser.getUid());
 
         CollectionReference tasksCollection = firestore.collection(TaskContract.COLLECTION_NAME);

@@ -28,7 +28,7 @@ public class Task {
         @NonNull String title,
         @NonNull String description,
         boolean completed,
-        @NonNull LocalDateTime deadline
+        @Nullable LocalDateTime deadline
     ) {
         this.id = id;
         this.title = title;
@@ -59,7 +59,7 @@ public class Task {
         return completed;
     }
 
-    @NonNull
+    @Nullable
     public LocalDateTime getDeadline() {
         return deadline;
     }

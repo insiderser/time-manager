@@ -120,7 +120,9 @@ public class TaskActivity extends BaseActivity {
     }
 
     private void displayDeadline() {
-        String formattedDeadline = currentDeadline != null ? formatDateTime(currentDeadline) : "";
+        String formattedDeadline = currentDeadline != null
+            ? formatDateTime(currentDeadline)
+            : getString(R.string.choose_deadline);
         deadlineTextView.setText(formattedDeadline);
     }
 
