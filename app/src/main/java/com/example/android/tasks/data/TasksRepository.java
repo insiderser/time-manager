@@ -74,9 +74,9 @@ public class TasksRepository {
      */
     @NonNull
     public LiveData<List<Task>> getAllTasksForUser(@NonNull String userUid) {
-        Query query = firestore.collection("tasks")
-            .whereEqualTo("user_uid", userUid)
-            .orderBy("deadline");
+        Query query = firestore.collection(TaskContract.COLLECTION_NAME)
+            .whereEqualTo(TaskContract.USER_UID, userUid)
+            .orderBy(TaskContract.DEADLINE);
         return getTasksInternal(query);
     }
 
@@ -86,8 +86,8 @@ public class TasksRepository {
      */
     @NonNull
     public LiveData<List<Task>> getAllTasksForAllUsers() {
-        Query query = firestore.collection("tasks")
-            .orderBy("deadline");
+        Query query = firestore.collection(TaskContract.COLLECTION_NAME)
+            .orderBy(TaskContract.DEADLINE);
         return getTasksInternal(query);
     }
 
@@ -121,7 +121,7 @@ public class TasksRepository {
      */
     @NonNull
     public LiveData<Task> getTask(@NonNull String taskId) {
-        DocumentReference documentReference = firestore.collection("tasks")
+        DocumentReference documentReference = firestore.collection(TaskContract.COLLECTION_NAME)
             .document(taskId);
 
         return getTaskInternal(documentReference);
@@ -148,11 +148,11 @@ public class TasksRepository {
     @SuppressWarnings("ConstantConditions")
     private static Task getTask(@NonNull DocumentSnapshot taskSnapshot) {
         String id = taskSnapshot.getId();
-        String title = taskSnapshot.get("title", String.class);
-        String description = taskSnapshot.get("description", String.class);
-        boolean completed = taskSnapshot.get("completed", Boolean.TYPE);
+        String title = taskSnapshot.get(TaskContract.TITLE, String.class);
+        String description = taskSnapshot.get(TaskContract.DESCRIPTION, String.class);
+        boolean completed = taskSnapshot.get(TaskContract.COMPLETED, Boolean.TYPE);
 
-        String deadlineTimestamp = taskSnapshot.get("deadline", String.class);
+        String deadlineTimestamp = taskSnapshot.get(TaskContract.DEADLINE, String.class);
         LocalDateTime deadline = LocalDateTime.parse(deadlineTimestamp);
 
         return new Task(id, title, description, completed, deadline);
@@ -166,9 +166,9 @@ public class TasksRepository {
      */
     @NonNull
     public LiveData<List<SubTask>> getSubTasksForTask(@NonNull String taskId) {
-        Query query = firestore.collection("tasks")
+        Query query = firestore.collection(TaskContract.COLLECTION_NAME)
             .document(taskId)
-            .collection("subtasks");
+            .collection(SubtaskContract.COLLECTION_NAME);
 
         return getSubTasksInternal(query);
     }
@@ -200,8 +200,8 @@ public class TasksRepository {
     @SuppressWarnings("ConstantConditions")
     private static SubTask getSubTask(@NonNull DocumentSnapshot document) {
         String id = document.getId();
-        String title = document.get("title", String.class);
-        boolean completed = document.get("completed", Boolean.TYPE);
+        String title = document.get(SubtaskContract.TITLE, String.class);
+        boolean completed = document.get(SubtaskContract.COMPLETED, Boolean.TYPE);
 
         return new SubTask(id, title, completed);
     }
@@ -246,13 +246,13 @@ public class TasksRepository {
 
         int numberOfFields = 5;
         Map<String, Object> fields = new HashMap<>(numberOfFields);
-        fields.put("title", task.getTitle());
-        fields.put("description", task.getDescription());
-        fields.put("completed", task.isCompleted());
-        fields.put("deadline", task.getDeadline().toString());
-        fields.put("user_uid", currentUser.getUid());
+        fields.put(TaskContract.TITLE, task.getTitle());
+        fields.put(TaskContract.DESCRIPTION, task.getDescription());
+        fields.put(TaskContract.COMPLETED, task.isCompleted());
+        fields.put(TaskContract.DEADLINE, task.getDeadline().toString());
+        fields.put(TaskContract.USER_UID, currentUser.getUid());
 
-        CollectionReference tasksCollection = firestore.collection("tasks");
+        CollectionReference tasksCollection = firestore.collection(TaskContract.COLLECTION_NAME);
         String taskId = task.getId();
 
         return insertOrUpdate(tasksCollection, fields, taskId);
@@ -275,12 +275,12 @@ public class TasksRepository {
     public String insertOrUpdateSubTask(@NonNull SubTask subTask, @NonNull String parentTaskId) {
         int numberOfFields = 2;
         Map<String, Object> fields = new HashMap<>(numberOfFields);
-        fields.put("title", subTask.getTitle());
-        fields.put("completed", subTask.isCompleted());
+        fields.put(SubtaskContract.TITLE, subTask.getTitle());
+        fields.put(SubtaskContract.COMPLETED, subTask.isCompleted());
 
-        CollectionReference subTasksCollection = firestore.collection("tasks")
+        CollectionReference subTasksCollection = firestore.collection(TaskContract.COLLECTION_NAME)
             .document(parentTaskId)
-            .collection("subtasks");
+            .collection(SubtaskContract.COLLECTION_NAME);
         String subTaskId = subTask.getId();
 
         return insertOrUpdate(subTasksCollection, fields, subTaskId);
@@ -322,5 +322,24 @@ public class TasksRepository {
             });
 
         return newDocumentId;
+    }
+
+    private static final class TaskContract {
+
+        static final String COLLECTION_NAME = "tasks";
+
+        static final String TITLE = "title";
+        static final String DESCRIPTION = "description";
+        static final String COMPLETED = "completed";
+        static final String DEADLINE = "deadline";
+        static final String USER_UID = "user_uid";
+    }
+
+    private static final class SubtaskContract {
+
+        static final String COLLECTION_NAME = "subtasks";
+
+        static final String TITLE = "title";
+        static final String COMPLETED = "completed";
     }
 }
