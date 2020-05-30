@@ -63,7 +63,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         void bind(Task task) {
             currentTask = task;
             titleView.setText(task.getTitle());
-            completedCheckBox.setActivated(task.isCompleted());
+            completedCheckBox.setChecked(task.isCompleted());
         }
 
         @Override
