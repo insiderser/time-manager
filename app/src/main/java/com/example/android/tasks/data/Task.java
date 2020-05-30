@@ -12,6 +12,8 @@ import org.threeten.bp.LocalDateTime;
  * <p>
  * Rationale behind this: Firebase counts every fetched field for billing purposes.
  * Fetching every task along with its subtasks would significantly grow our usage.
+ * <p>
+ * {@code null} {@link #id} indicates that this Task doesn't have any ID.
  */
 public class Task {
 
