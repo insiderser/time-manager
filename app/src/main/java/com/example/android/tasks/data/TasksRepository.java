@@ -132,7 +132,7 @@ public class TasksRepository {
         MutableLiveData<Task> taskLiveData = new MutableLiveData<>();
 
         documentReference.addSnapshotListener((documentSnapshot, e) -> {
-            if (documentSnapshot != null) {
+            if (documentSnapshot != null && documentSnapshot.exists()) {
                 Task task = getTask(documentSnapshot);
                 taskLiveData.setValue(task);
             } else {
@@ -327,7 +327,7 @@ public class TasksRepository {
     /**
      * Deletes task with given ID.
      */
-    public void deleteTask(String taskId) {
+    public void deleteTask(@NonNull String taskId) {
         firestore.collection(TaskContract.COLLECTION_NAME)
             .document(taskId)
             .delete()

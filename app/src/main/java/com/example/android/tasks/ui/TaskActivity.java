@@ -37,6 +37,13 @@ public class TaskActivity extends BaseActivity {
         descriptionEditText = findViewById(R.id.task_description);
         completedCheckBox = findViewById(R.id.task_completed_checkbox);
 
+        completedCheckBox.setOnCheckedChangeListener((checkBox, isChecked) -> {
+            if (isChecked) {
+                deleteTask();
+                finish();
+            }
+        });
+
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -105,6 +112,12 @@ public class TaskActivity extends BaseActivity {
         List<SubTask> subtasks = /*TODO*/ Collections.emptyList();
 
         repository.insertOrUpdateTask(task, subtasks);
+    }
+
+    private void deleteTask() {
+        if (taskId != null) {
+            repository.deleteTask(taskId);
+        }
     }
 
     @Override
