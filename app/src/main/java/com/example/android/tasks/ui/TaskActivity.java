@@ -2,6 +2,7 @@ package com.example.android.tasks.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +23,7 @@ public class TaskActivity extends BaseActivity {
 
     private EditText titleEditText;
     private EditText descriptionEditText;
+    private CheckBox completedCheckBox;
 
     private TasksRepository repository;
     private String taskId;
@@ -33,6 +35,7 @@ public class TaskActivity extends BaseActivity {
 
         titleEditText = findViewById(R.id.task_title);
         descriptionEditText = findViewById(R.id.task_description);
+        completedCheckBox = findViewById(R.id.task_completed_checkbox);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -84,6 +87,7 @@ public class TaskActivity extends BaseActivity {
     private void displayTask(@NonNull Task task) {
         titleEditText.setText(task.getTitle());
         descriptionEditText.setText(task.getDescription());
+        completedCheckBox.setChecked(task.isCompleted());
     }
 
     private void displaySubtasks(@NonNull List<SubTask> subtasks) {
@@ -94,7 +98,7 @@ public class TaskActivity extends BaseActivity {
         String taskId = this.taskId;
         String title = titleEditText.getText().toString();
         String description = descriptionEditText.getText().toString();
-        boolean completed = /*TODO*/ false;
+        boolean completed = completedCheckBox.isChecked();
         LocalDateTime deadline = /*TODO*/ LocalDateTime.now();
 
         Task task = new Task(taskId, title, description, completed, deadline);

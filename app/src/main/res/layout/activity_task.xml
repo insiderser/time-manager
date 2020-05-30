@@ -7,6 +7,22 @@
     android:orientation="vertical"
     tools:context=".ui.TaskActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/task_completed_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!-- TODO: deadline -->
+    </LinearLayout>
+
+    <View style="@style/Divider" />
+
     <EditText
         android:id="@+id/task_title"
         android:layout_width="match_parent"
