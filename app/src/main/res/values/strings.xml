@@ -24,4 +24,7 @@
     <string name="title">Title</string>
     <string name="description">Description</string>
     <string name="choose_deadline">Click to choose deadline</string>
+
+    <string name="view_scope_for_all_users">For all users</string>
+    <string name="view_scope_for_current_user">Your tasks</string>
 </resources>

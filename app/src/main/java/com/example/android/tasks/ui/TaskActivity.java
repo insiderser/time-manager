@@ -3,6 +3,7 @@ package com.example.android.tasks.ui;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.CheckBox;
@@ -32,6 +33,8 @@ import org.threeten.bp.format.FormatStyle;
 public class TaskActivity extends BaseActivity {
 
     public static final String EXTRA_TASK_ID = "task_id";
+    public static final String EXTRA_IN_EDIT_MODE = "in_edit_mode";
+
     private static final String KEY_CURRENT_DEADLINE = "current_deadline";
 
     private EditText titleEditText;
@@ -43,6 +46,8 @@ public class TaskActivity extends BaseActivity {
 
     private String taskId;
     private LocalDateTime currentDeadline;
+
+    private boolean inEditMode;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,7 +61,7 @@ public class TaskActivity extends BaseActivity {
         View dateButton = findViewById(R.id.date_button);
 
         completedCheckBox.setOnCheckedChangeListener((checkBox, isChecked) -> {
-            if (isChecked) {
+            if (inEditMode && isChecked) {
                 deleteTask();
                 finish();
             }
@@ -71,9 +76,18 @@ public class TaskActivity extends BaseActivity {
 
         Intent intent = getIntent();
         taskId = intent.getStringExtra(EXTRA_TASK_ID);
+        inEditMode = intent.getBooleanExtra(EXTRA_IN_EDIT_MODE, true);
 
-        boolean editingExistingTask = taskId != null;
-        if (editingExistingTask && savedInstanceState == null) {
+        if (!inEditMode) {
+            // Disable everything editable.
+            titleEditText.setInputType(InputType.TYPE_NULL);
+            descriptionEditText.setInputType(InputType.TYPE_NULL);
+            completedCheckBox.setEnabled(false);
+            dateButton.setEnabled(false);
+        }
+
+        boolean viewingExistingTask = taskId != null;
+        if (viewingExistingTask && savedInstanceState == null) {
             fetchTask();
             fetchSubtasks();
         }
@@ -136,6 +150,10 @@ public class TaskActivity extends BaseActivity {
     }
 
     private void chooseDeadline() {
+        if (!inEditMode) {
+            return;
+        }
+
         CalendarConstraints constraints = new Builder()
             .setValidator(DateValidatorPointForward.now())
             .build();
@@ -168,6 +186,10 @@ public class TaskActivity extends BaseActivity {
     }
 
     private void saveTask() {
+        if (!inEditMode) {
+            return;
+        }
+
         String taskId = this.taskId;
         String title = titleEditText.getText().toString();
         String description = descriptionEditText.getText().toString();
@@ -181,7 +203,7 @@ public class TaskActivity extends BaseActivity {
     }
 
     private void deleteTask() {
-        if (taskId != null) {
+        if (inEditMode && taskId != null) {
             repository.deleteTask(taskId);
         }
     }

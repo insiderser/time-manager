@@ -19,9 +19,11 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
 
     private final List<Task> tasksList = new ArrayList<>();
     private final OnTaskListener onTaskListener;
+    private final boolean inEditMode;
 
-    public TasksAdapter(OnTaskListener onTaskListener) {
+    public TasksAdapter(@NonNull OnTaskListener onTaskListener, boolean inEditMode) {
         this.onTaskListener = onTaskListener;
+        this.inEditMode = inEditMode;
     }
 
     @NonNull
@@ -30,7 +32,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         int layoutId = R.layout.task_item_view;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(layoutId, parent, false);
-        return new TaskViewHolder(view, onTaskListener);
+        return new TaskViewHolder(view, onTaskListener, inEditMode);
     }
 
     @Override
@@ -52,7 +54,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
 
         private Task currentTask = null;
 
-        TaskViewHolder(View itemView, OnTaskListener onTaskListener) {
+        TaskViewHolder(View itemView, OnTaskListener onTaskListener, boolean inEditMode) {
             super(itemView);
 
             titleView = itemView.findViewById(R.id.task_title);
@@ -61,6 +63,8 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
 
             itemView.setOnClickListener(this);
             completedCheckBox.setOnCheckedChangeListener(this);
+
+            completedCheckBox.setEnabled(inEditMode);
         }
 
         void bind(Task task) {
