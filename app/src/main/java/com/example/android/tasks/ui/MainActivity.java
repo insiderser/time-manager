@@ -14,6 +14,7 @@ import com.example.android.tasks.R;
 import com.example.android.tasks.adapter.TasksAdapter;
 import com.example.android.tasks.data.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import java.util.List;
 
 public class MainActivity extends BaseActivity implements TasksAdapter.OnTaskListener {
@@ -102,6 +103,10 @@ public class MainActivity extends BaseActivity implements TasksAdapter.OnTaskLis
                 toggleViewScope();
                 return true;
 
+            case R.id.sign_out:
+                signOut();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -116,5 +121,10 @@ public class MainActivity extends BaseActivity implements TasksAdapter.OnTaskLis
         overridePendingTransition(0, 0);
 
         finish();
+    }
+
+    private void signOut() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth.signOut();
     }
 }

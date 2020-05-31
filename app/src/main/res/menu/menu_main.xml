@@ -6,4 +6,9 @@
         android:id="@+id/toggle_view_scope"
         android:title="@string/view_scope_for_all_users"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/sign_out"
+        android:title="@string/sign_out"
+        app:showAsAction="never" />
 </menu>
