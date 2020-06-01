@@ -332,15 +332,33 @@ public class TasksRepository {
      * Deletes task with given ID.
      */
     public void deleteTask(@NonNull String taskId) {
-        firestore.collection(TaskContract.COLLECTION_NAME)
-            .document(taskId)
-            .delete()
+        DocumentReference document = firestore.collection(TaskContract.COLLECTION_NAME)
+            .document(taskId);
+        delete(document);
+    }
+
+    /**
+     * Deletes subtask with given ID.
+     */
+    public void deleteSubtask(@NonNull String subTaskId, @NonNull String parentTaskId) {
+        DocumentReference document = firestore.collection(TaskContract.COLLECTION_NAME)
+            .document(parentTaskId)
+            .collection(SubtaskContract.COLLECTION_NAME)
+            .document(subTaskId);
+        delete(document);
+    }
+
+    private void delete(DocumentReference document) {
+        document.delete()
             .addOnCompleteListener(result -> {
+                CollectionReference parent = document.getParent();
+                String documentType = parent.getId();
+
                 if (result.isSuccessful()) {
-                    Log.d(TAG, "Task successfully deleted.");
+                    Log.d(TAG, documentType + " successfully deleted.");
                 } else {
                     Exception e = result.getException();
-                    Log.w(TAG, "Failed to delete task", e);
+                    Log.w(TAG, "Failed to delete " + documentType, e);
                 }
             });
     }
