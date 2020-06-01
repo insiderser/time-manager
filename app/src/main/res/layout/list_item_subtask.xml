@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/black"
+    android:orientation="horizontal"
+    tools:showIn="@layout/activity_task"
+    android:layout_margin="2dp">
+
+    <CheckBox
+        android:id="@+id/subtask_completed"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        android:contentDescription="@string/is_subtask_completed" />
+
+    <TextView
+        android:id="@+id/subtask_title"
+        style="@style/SubTaskTitlePrimary"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="4dp"
+        android:layout_weight="8"
+        android:lines="1"
+        tools:text="Hello" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_clear_24"
+        android:background="?attr/selectableItemBackground"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:contentDescription="@string/delete_subtask" />
+
+</LinearLayout>
