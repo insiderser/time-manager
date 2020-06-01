@@ -42,7 +42,7 @@
             android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
             android:padding="16dp"
             android:textAppearance="?attr/textAppearanceBody1"
-            tools:text="@tools:sample/lorem/random" />
+            tools:text="Task description." />
 
         <View style="@style/Divider" />
 
@@ -51,6 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            tools:itemCount="4"
             tools:listitem="@layout/list_item_subtask" />
 
         <include layout="@layout/content_add_subtask_button" />
