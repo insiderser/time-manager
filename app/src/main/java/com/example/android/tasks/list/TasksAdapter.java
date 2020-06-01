@@ -19,7 +19,7 @@ class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_DATE = 1;
     private static final int TYPE_TASK = 2;
 
-    private final List<Object> list = new ArrayList<>();
+    private final List<ListItem> list = new ArrayList<>();
     private final OnTaskListener onTaskListener;
     private final boolean inEditMode;
 
@@ -32,6 +32,7 @@ class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+
         if (viewType == TYPE_TASK) {
             View view = inflater.inflate(R.layout.list_item_task, parent, false);
             return new TaskViewHolder(view, onTaskListener, inEditMode);
@@ -45,14 +46,18 @@ class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        Object item = list.get(position);
+        ListItem item = list.get(position);
 
         if (holder instanceof TaskViewHolder) {
             TaskViewHolder taskHolder = (TaskViewHolder) holder;
-            taskHolder.bind((Task) item);
+            ListItem.TaskItem taskItem = (ListItem.TaskItem) item;
+
+            taskHolder.bind(taskItem.getTask());
         } else if (holder instanceof DateViewHolder) {
             DateViewHolder dateHolder = (DateViewHolder) holder;
-            dateHolder.bind((LocalDate) item);
+            ListItem.Date dateItem = (ListItem.Date) item;
+
+            dateHolder.bind(dateItem.getDate());
         } else {
             throw new IllegalStateException("Unknown holder: " + holder.getClass().getName());
         }
@@ -76,15 +81,19 @@ class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 newDate = deadline.toLocalDate();
 
                 if (previousDate == null || newDate.isAfter(previousDate)) {
-                    list.add(newDate);
+                    ListItem dateItem = new ListItem.Date(newDate);
+                    list.add(dateItem);
+
                     previousDate = newDate;
                 }
             } else if (previousDate != null) {
-                list.add(null);
+                ListItem dateItem = new ListItem.Date(null);
+                list.add(dateItem);
                 previousDate = null;
             }
 
-            list.add(task);
+            ListItem taskItem = new ListItem.TaskItem(task);
+            list.add(taskItem);
         }
     }
 
@@ -95,11 +104,11 @@ class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        Object item = list.get(position);
+        ListItem item = list.get(position);
 
-        if (item == null || item instanceof LocalDate) {
+        if (item instanceof ListItem.Date) {
             return TYPE_DATE;
-        } else if (item instanceof Task) {
+        } else if (item instanceof ListItem.TaskItem) {
             return TYPE_TASK;
         } else {
             throw new IllegalStateException("Unknown item: " + item.getClass().getName());
