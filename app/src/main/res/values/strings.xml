@@ -31,4 +31,5 @@
     <string name="is_subtask_completed">Is subtask completed?</string>
     <string name="delete_subtask">Delete subtask</string>
     <string name="subtask_description">Subtask description</string>
+    <string name="add_subtasks">Add subtasks</string>
 </resources>

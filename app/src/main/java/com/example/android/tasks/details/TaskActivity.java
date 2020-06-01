@@ -45,6 +45,7 @@ public class TaskActivity extends BaseActivity implements OnSubTaskListener {
     private CheckBox completedCheckBox;
     private TextView deadlineTextView;
     private View dateButton;
+    private View addSubtaskButton;
 
     private RecyclerView subtaskRecyclerView;
     private SubTaskAdapter subTaskAdapter;
@@ -71,6 +72,7 @@ public class TaskActivity extends BaseActivity implements OnSubTaskListener {
         completedCheckBox = findViewById(R.id.task_completed_checkbox);
         deadlineTextView = findViewById(R.id.task_deadline);
         dateButton = findViewById(R.id.date_button);
+        addSubtaskButton = findViewById(R.id.subtask_add_btn);
 
         initRecyclerView();
 
@@ -82,6 +84,7 @@ public class TaskActivity extends BaseActivity implements OnSubTaskListener {
         });
 
         dateButton.setOnClickListener(v -> chooseDeadline());
+        addSubtaskButton.setOnClickListener(v -> addNewSubtask());
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -207,6 +210,10 @@ public class TaskActivity extends BaseActivity implements OnSubTaskListener {
         }, currentDateTime.getHour(), currentDateTime.getMinute(), isSystem24Hour);
 
         timePickerDialog.show();
+    }
+
+    private void addNewSubtask() {
+        // TODO
     }
 
     private void saveTask() {
