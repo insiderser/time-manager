@@ -19,17 +19,18 @@
 
     <EditText
         android:id="@+id/subtask_title"
-        style="@style/SubTaskTitlePrimary"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_margin="4dp"
         android:layout_weight="8"
         android:background="@android:color/transparent"
+        android:ellipsize="end"
         android:hint="@string/subtask_description"
         android:importantForAutofill="no"
         android:inputType="textCapSentences|textAutoComplete"
         android:lines="1"
+        android:textAppearance="?attr/textAppearanceBody1"
         tools:text="Hello" />
 
     <ImageButton
