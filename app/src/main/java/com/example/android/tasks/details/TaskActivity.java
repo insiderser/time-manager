@@ -44,6 +44,7 @@ public class TaskActivity extends BaseActivity implements OnSubTaskListener {
     private EditText descriptionEditText;
     private CheckBox completedCheckBox;
     private TextView deadlineTextView;
+    private View dateButton;
 
     private RecyclerView subtaskRecyclerView;
     private SubTaskAdapter subTaskAdapter;
@@ -60,11 +61,16 @@ public class TaskActivity extends BaseActivity implements OnSubTaskListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
 
+        initViews();
+        initData(savedInstanceState);
+    }
+
+    private void initViews() {
         titleEditText = findViewById(R.id.task_title);
         descriptionEditText = findViewById(R.id.task_description);
         completedCheckBox = findViewById(R.id.task_completed_checkbox);
         deadlineTextView = findViewById(R.id.task_deadline);
-        View dateButton = findViewById(R.id.date_button);
+        dateButton = findViewById(R.id.date_button);
 
         initRecyclerView();
 
@@ -79,7 +85,17 @@ public class TaskActivity extends BaseActivity implements OnSubTaskListener {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+    }
 
+    private void initRecyclerView() {
+        subtaskRecyclerView = findViewById(R.id.subtasks_recycle_view);
+        subtaskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        subTaskAdapter = new SubTaskAdapter(this, inEditMode);
+        subtaskRecyclerView.setAdapter(subTaskAdapter);
+    }
+
+    private void initData(@Nullable Bundle savedInstanceState) {
         repository = new TasksRepository();
 
         Intent intent = getIntent();
@@ -214,14 +230,6 @@ public class TaskActivity extends BaseActivity implements OnSubTaskListener {
         if (inEditMode && taskId != null) {
             repository.deleteTask(taskId);
         }
-    }
-
-    private void initRecyclerView() {
-        subtaskRecyclerView = findViewById(R.id.subtasks_recycle_view);
-        subtaskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        subTaskAdapter = new SubTaskAdapter(this, inEditMode);
-        subtaskRecyclerView.setAdapter(subTaskAdapter);
     }
 
     @Override
