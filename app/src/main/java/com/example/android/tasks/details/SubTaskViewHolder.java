@@ -1,6 +1,5 @@
 package com.example.android.tasks.details;
 
-import android.text.InputType;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -32,7 +31,7 @@ class SubTaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         completedCheckBox.setOnCheckedChangeListener(this);
 
         if (!inEditMode) {
-            titleView.setInputType(InputType.TYPE_NULL);
+            titleView.setFocusable(false);
             deleteButton.setEnabled(false);
             completedCheckBox.setEnabled(false);
         }

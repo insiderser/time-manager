@@ -3,7 +3,6 @@ package com.example.android.tasks.details;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.CheckBox;
@@ -107,8 +106,8 @@ public class TaskActivity extends BaseActivity implements OnSubTaskListener {
 
         if (!inEditMode) {
             // Disable everything editable.
-            titleEditText.setInputType(InputType.TYPE_NULL);
-            descriptionEditText.setInputType(InputType.TYPE_NULL);
+            titleEditText.setFocusable(false);
+            descriptionEditText.setFocusable(false);
             completedCheckBox.setEnabled(false);
             dateButton.setEnabled(false);
         }
