@@ -149,7 +149,7 @@ public class TaskActivity extends BaseActivity implements OnSubTaskListener {
     }
 
     private void displaySubtasks(@NonNull List<SubTask> subtasks) {
-        // TODO
+        subTaskAdapter.setItems(subtasks);
     }
 
     private String formatDateTime(@NonNull LocalDateTime dateTime) {
