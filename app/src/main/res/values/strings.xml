@@ -29,5 +29,6 @@
     <string name="view_scope_for_current_user">Your tasks</string>
     <string name="sign_out">Sign out</string>
     <string name="is_subtask_completed">Is subtask completed?</string>
-    <string name="delete_subtask">Button to delete subtask</string>
+    <string name="delete_subtask">Delete subtask</string>
+    <string name="subtask_description">Subtask description</string>
 </resources>

@@ -1,35 +1,41 @@
-package com.example.android.tasks.list;
+package com.example.android.tasks.details;
 
+import android.text.InputType;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.TextView;
-
+import android.widget.EditText;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.android.tasks.R;
 import com.example.android.tasks.data.SubTask;
 
 class SubTaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
-        CheckBox.OnCheckedChangeListener {
+    CheckBox.OnCheckedChangeListener {
 
-    private final TextView titleView;
+    private final EditText titleView;
     private final CheckBox completedCheckBox;
+
     private final OnSubTaskListener onSubTaskListener;
 
     private SubTask currentSubTask;
 
-    public SubTaskViewHolder(View itemView, OnSubTaskListener onSubTaskListener, boolean inEditMode) {
+    SubTaskViewHolder(@NonNull View itemView, @NonNull OnSubTaskListener onSubTaskListener, boolean inEditMode) {
         super(itemView);
 
         titleView = itemView.findViewById(R.id.subtask_title);
         completedCheckBox = itemView.findViewById(R.id.subtask_completed);
+        View deleteButton = itemView.findViewById(R.id.subtask_delete);
         this.onSubTaskListener = onSubTaskListener;
 
-        itemView.setOnClickListener(this);
+        deleteButton.setOnClickListener(this);
         completedCheckBox.setOnCheckedChangeListener(this);
 
-        completedCheckBox.setEnabled(inEditMode);
+        if (!inEditMode) {
+            titleView.setInputType(InputType.TYPE_NULL);
+            deleteButton.setEnabled(false);
+            completedCheckBox.setEnabled(false);
+        }
     }
 
     void bind(SubTask subTask) {
@@ -40,7 +46,7 @@ class SubTaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        onSubTaskListener.onSubTaskClick(currentSubTask);
+        onSubTaskListener.onSubTaskDeleteButtonClicked(currentSubTask);
     }
 
     @Override

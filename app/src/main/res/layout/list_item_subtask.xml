@@ -4,36 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="2dp"
     android:background="@color/black"
     android:orientation="horizontal"
-    tools:showIn="@layout/activity_task"
-    android:layout_margin="2dp">
+    tools:showIn="@layout/activity_task">
 
     <CheckBox
         android:id="@+id/subtask_completed"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_margin="8dp"
         android:contentDescription="@string/is_subtask_completed" />
 
-    <TextView
+    <EditText
         android:id="@+id/subtask_title"
         style="@style/SubTaskTitlePrimary"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="center_vertical"
         android:layout_margin="4dp"
         android:layout_weight="8"
+        android:background="@android:color/transparent"
+        android:hint="@string/subtask_description"
+        android:importantForAutofill="no"
+        android:inputType="textCapSentences|textAutoComplete"
         android:lines="1"
         tools:text="Hello" />
 
     <ImageButton
+        android:id="@+id/subtask_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_clear_24"
-        android:background="?attr/selectableItemBackground"
-        android:layout_gravity="center"
+        android:layout_gravity="center_vertical"
         android:layout_margin="8dp"
-        android:contentDescription="@string/delete_subtask" />
+        android:background="?attr/selectableItemBackground"
+        android:contentDescription="@string/delete_subtask"
+        android:src="@drawable/ic_baseline_clear_24" />
 
 </LinearLayout>

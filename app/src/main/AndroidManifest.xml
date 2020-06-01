@@ -27,7 +27,7 @@
             android:theme="@style/AppTheme.Login" />
 
         <activity
-            android:name=".ui.TaskActivity"
+            android:name=".details.TaskActivity"
             android:theme="@style/AppTheme" />
 
     </application>

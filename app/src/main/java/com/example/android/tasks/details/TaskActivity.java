@@ -1,4 +1,4 @@
-package com.example.android.tasks.ui;
+package com.example.android.tasks.details;
 
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -17,26 +16,22 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.android.tasks.R;
 import com.example.android.tasks.data.SubTask;
 import com.example.android.tasks.data.Task;
 import com.example.android.tasks.data.TasksRepository;
-import com.example.android.tasks.list.OnSubTaskListener;
-import com.example.android.tasks.list.SubTaskAdapter;
+import com.example.android.tasks.ui.BaseActivity;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.CalendarConstraints.Builder;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
-
+import java.util.Collections;
+import java.util.List;
 import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.FormatStyle;
-
-import java.util.Collections;
-import java.util.List;
 
 public class TaskActivity extends BaseActivity implements OnSubTaskListener {
 
@@ -72,7 +67,6 @@ public class TaskActivity extends BaseActivity implements OnSubTaskListener {
         View dateButton = findViewById(R.id.date_button);
 
         initRecyclerView();
-
 
         completedCheckBox.setOnCheckedChangeListener((checkBox, isChecked) -> {
             if (inEditMode && isChecked) {
@@ -259,7 +253,7 @@ public class TaskActivity extends BaseActivity implements OnSubTaskListener {
     }
 
     @Override
-    public void onSubTaskClick(@NonNull SubTask subTask) {
+    public void onSubTaskDeleteButtonClicked(@NonNull SubTask subTask) {
         //TODO
     }
 

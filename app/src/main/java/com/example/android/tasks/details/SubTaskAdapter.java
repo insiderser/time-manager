@@ -1,16 +1,12 @@
-package com.example.android.tasks.list;
+package com.example.android.tasks.details;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.android.tasks.R;
 import com.example.android.tasks.data.SubTask;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +17,7 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskViewHolder> {
     private final OnSubTaskListener onSubTaskListener;
     private final boolean inEditMode;
 
-    public SubTaskAdapter(@NonNull OnSubTaskListener onSubTaskListener, boolean inEditMode) {
+    SubTaskAdapter(@NonNull OnSubTaskListener onSubTaskListener, boolean inEditMode) {
         this.onSubTaskListener = onSubTaskListener;
         this.inEditMode = inEditMode;
     }
@@ -45,11 +41,9 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskViewHolder> {
         return subTasksList.size();
     }
 
-    void setItems(@Nullable Collection<SubTask> subTasks) {
+    void setItems(@NonNull Collection<SubTask> subTasks) {
         subTasksList.clear();
-        if (subTasks != null) {
-            subTasksList.addAll(subTasks);
-        }
+        subTasksList.addAll(subTasks);
         notifyDataSetChanged();
     }
 }
