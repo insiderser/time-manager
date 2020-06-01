@@ -1,4 +1,4 @@
-package com.example.android.tasks.ui;
+package com.example.android.tasks.list;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -8,13 +8,13 @@ import com.example.android.tasks.data.Task;
 import com.example.android.tasks.data.TasksRepository;
 import java.util.List;
 
-public class MainActivityViewModel extends ViewModel {
+class MainActivityViewModel extends ViewModel {
 
     private final TasksRepository repository = new TasksRepository();
 
     private final LiveData<List<Task>> tasks;
 
-    public MainActivityViewModel(boolean inEditMode) {
+    MainActivityViewModel(boolean inEditMode) {
         tasks = inEditMode
             ? repository.getAllTasksForCurrentUser()
             : repository.getAllTasksForAllUsers();
@@ -25,16 +25,16 @@ public class MainActivityViewModel extends ViewModel {
         return tasks;
     }
 
-    public void deleteTask(@NonNull Task task) {
+    void deleteTask(@NonNull Task task) {
         String taskId = task.getId();
         repository.deleteTask(taskId);
     }
 
-    public static class Factory implements ViewModelProvider.Factory {
+    static class Factory implements ViewModelProvider.Factory {
 
         private final boolean inEditMode;
 
-        public Factory(boolean inEditMode) {
+        Factory(boolean inEditMode) {
             this.inEditMode = inEditMode;
         }
 

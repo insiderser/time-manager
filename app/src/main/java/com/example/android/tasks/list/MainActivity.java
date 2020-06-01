@@ -1,4 +1,4 @@
-package com.example.android.tasks.ui;
+package com.example.android.tasks.list;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,13 +11,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.android.tasks.R;
-import com.example.android.tasks.adapter.TasksAdapter;
 import com.example.android.tasks.data.Task;
+import com.example.android.tasks.ui.BaseActivity;
+import com.example.android.tasks.ui.TaskActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import java.util.List;
 
-public class MainActivity extends BaseActivity implements TasksAdapter.OnTaskListener {
+public class MainActivity extends BaseActivity implements OnTaskListener {
 
     public static final String EXTRA_IN_EDIT_MODE = "view_tasks_for_all_users";
     private static final boolean DEFAULT_EXTRA_IN_EDIT_MODE = true;

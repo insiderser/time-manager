@@ -9,7 +9,7 @@
         android:id="@+id/tasks_recycle_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/task_item_view" />
+        tools:listitem="@layout/list_item_task" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_task_btn"
