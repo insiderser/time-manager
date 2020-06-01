@@ -12,30 +12,7 @@
         android:orientation="vertical"
         tools:context=".details.TaskActivity">
 
-        <LinearLayout
-            android:id="@+id/date_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:background="?attr/selectableItemBackground"
-            android:orientation="horizontal">
-
-            <CheckBox
-                android:id="@+id/task_completed_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/task_deadline"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:lines="1"
-                android:text="@string/choose_deadline"
-                android:textAppearance="?attr/textAppearanceBody1"
-                tools:text="@tools:sample/date/ddmmyy" />
-        </LinearLayout>
+        <include layout="@layout/content_date_button" />
 
         <View style="@style/Divider" />
 
@@ -76,31 +53,7 @@
             android:layout_margin="8dp"
             tools:listitem="@layout/list_item_subtask" />
 
-        <LinearLayout
-            android:id="@+id/subtask_add_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:src="@drawable/ic_add_24">
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginHorizontal="24dp"
-                android:background="@android:color/transparent"
-                android:importantForAccessibility="no"
-                android:src="@drawable/ic_add_24" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="@string/add_subtasks" />
-        </LinearLayout>
+        <include layout="@layout/content_add_subtask_button" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
