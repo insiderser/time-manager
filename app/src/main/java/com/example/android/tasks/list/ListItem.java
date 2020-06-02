@@ -15,6 +15,22 @@ abstract class ListItem {
     @Override
     public abstract boolean equals(@Nullable Object obj);
 
+    static boolean sameIds(ListItem first, ListItem second) {
+        if (first instanceof Date && second instanceof Date) {
+            return first.equals(second);
+        } else if (first instanceof TaskItem && second instanceof TaskItem) {
+            TaskItem firstTask = (TaskItem) first;
+            TaskItem secondTask = (TaskItem) second;
+
+            String firstId = firstTask.task.getId();
+            String secondId = secondTask.task.getId();
+
+            return Objects.equals(firstId, secondId);
+        } else {
+            return false;
+        }
+    }
+
     static class Date extends ListItem {
 
         private final LocalDate date;

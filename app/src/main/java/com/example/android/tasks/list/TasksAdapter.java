@@ -5,25 +5,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import com.example.android.tasks.R;
 import com.example.android.tasks.data.Task;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
 
-class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+class TasksAdapter extends ListAdapter<ListItem, ViewHolder> {
 
     private static final int TYPE_DATE = 1;
     private static final int TYPE_TASK = 2;
 
-    private final List<ListItem> list = new ArrayList<>();
     private final OnTaskListener onTaskListener;
     private final boolean inEditMode;
 
     TasksAdapter(@NonNull OnTaskListener onTaskListener, boolean inEditMode) {
+        super(new ListItemDiffCallback());
+
         this.onTaskListener = onTaskListener;
         this.inEditMode = inEditMode;
     }
@@ -46,7 +48,7 @@ class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ListItem item = list.get(position);
+        ListItem item = getItem(position);
 
         if (holder instanceof TaskViewHolder) {
             TaskViewHolder taskHolder = (TaskViewHolder) holder;
@@ -63,15 +65,14 @@ class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    void setItems(@Nullable Collection<Task> tasks) {
-        list.clear();
-        if (tasks != null) {
-            process(tasks);
-        }
-        notifyDataSetChanged();
+    void setItems(@Nullable List<Task> tasks) {
+        List<ListItem> items = tasks != null ? process(tasks) : null;
+        submitList(items);
     }
 
-    private void process(@NonNull Collection<Task> tasks) {
+    private List<ListItem> process(@NonNull List<Task> tasks) {
+        List<ListItem> list = new ArrayList<>(tasks.size());
+
         LocalDate previousDate = LocalDate.MIN;
         for (Task task : tasks) {
             LocalDate newDate;
@@ -95,16 +96,13 @@ class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ListItem taskItem = new ListItem.TaskItem(task);
             list.add(taskItem);
         }
-    }
 
-    @Override
-    public int getItemCount() {
-        return list.size();
+        return list;
     }
 
     @Override
     public int getItemViewType(int position) {
-        ListItem item = list.get(position);
+        ListItem item = getItem(position);
 
         if (item instanceof ListItem.Date) {
             return TYPE_DATE;
