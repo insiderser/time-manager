@@ -96,6 +96,7 @@ public class TaskActivity extends BaseActivity implements SubTasksListener {
         descriptionEditText.setFocusable(inEditMode);
         completedCheckBox.setEnabled(inEditMode);
         dateButton.setEnabled(inEditMode);
+        addSubtaskButton.setEnabled(inEditMode);
     }
 
     private void initRecyclerView() {
