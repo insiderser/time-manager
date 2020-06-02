@@ -33,4 +33,5 @@
     <string name="delete_subtask">Delete subtask</string>
     <string name="subtask_description">Subtask description</string>
     <string name="add_subtasks">Add subtasks</string>
+    <string name="deadline_passed">This time\'s already passed</string>
 </resources>

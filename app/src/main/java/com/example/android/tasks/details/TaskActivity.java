@@ -1,9 +1,7 @@
 package com.example.android.tasks.details;
 
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -20,14 +18,8 @@ import com.example.android.tasks.data.SubTask;
 import com.example.android.tasks.data.Task;
 import com.example.android.tasks.details.TaskActivityViewModel.Factory;
 import com.example.android.tasks.ui.BaseActivity;
-import com.google.android.material.datepicker.CalendarConstraints;
-import com.google.android.material.datepicker.CalendarConstraints.Builder;
-import com.google.android.material.datepicker.DateValidatorPointForward;
-import com.google.android.material.datepicker.MaterialDatePicker;
 import java.util.List;
-import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDateTime;
-import org.threeten.bp.ZoneId;
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.FormatStyle;
 
@@ -47,8 +39,7 @@ public class TaskActivity extends BaseActivity implements SubTasksListener {
     private SubTaskAdapter subTaskAdapter;
 
     private TaskActivityViewModel viewModel;
-
-    private LocalDateTime currentDeadline;
+    private DeadlineDelegate deadlineDelegate;
 
     private boolean inEditMode;
 
@@ -63,6 +54,8 @@ public class TaskActivity extends BaseActivity implements SubTasksListener {
 
         ViewModelProvider.Factory viewModelFactory = new Factory(taskId);
         viewModel = new ViewModelProvider(this, viewModelFactory).get(TaskActivityViewModel.class);
+
+        deadlineDelegate = new DeadlineDelegate(this, this::displayDeadline);
 
         initViews();
         initData();
@@ -85,7 +78,7 @@ public class TaskActivity extends BaseActivity implements SubTasksListener {
             }
         });
 
-        dateButton.setOnClickListener(v -> chooseDeadline());
+        dateButton.setOnClickListener(v -> deadlineDelegate.chooseNewDeadline());
         addSubtaskButton.setOnClickListener(v -> createNewSubtask());
 
         ActionBar actionBar = getSupportActionBar();
@@ -113,7 +106,7 @@ public class TaskActivity extends BaseActivity implements SubTasksListener {
 
         taskLiveData.observe(this, task -> {
             if (task != null) {
-                currentDeadline = task.getDeadline();
+                deadlineDelegate.setDeadline(task.getDeadline());
                 displayTask(task);
             }
         });
@@ -129,18 +122,14 @@ public class TaskActivity extends BaseActivity implements SubTasksListener {
         titleEditText.setText(task.getTitle());
         descriptionEditText.setText(task.getDescription());
         completedCheckBox.setChecked(task.isCompleted());
-        displayDeadline();
+        displayDeadline(task.getDeadline());
     }
 
-    private void displayDeadline() {
-        String formattedDeadline = currentDeadline != null
-            ? formatDateTime(currentDeadline)
+    private void displayDeadline(LocalDateTime deadline) {
+        String formattedDeadline = deadline != null
+            ? formatDateTime(deadline)
             : getString(R.string.choose_deadline);
         deadlineTextView.setText(formattedDeadline);
-    }
-
-    private void displaySubtasks(@NonNull List<SubTask> subtasks) {
-        subTaskAdapter.setItems(subtasks);
     }
 
     private String formatDateTime(@NonNull LocalDateTime dateTime) {
@@ -148,40 +137,8 @@ public class TaskActivity extends BaseActivity implements SubTasksListener {
         return formatter.format(dateTime);
     }
 
-    private void chooseDeadline() {
-        if (!inEditMode) {
-            return;
-        }
-
-        CalendarConstraints constraints = new Builder()
-            .setValidator(DateValidatorPointForward.now())
-            .build();
-
-        MaterialDatePicker<Long> picker = MaterialDatePicker.Builder.datePicker()
-            .setCalendarConstraints(constraints)
-            .build();
-
-        picker.addOnPositiveButtonClickListener(selection -> {
-            ZoneId utcZone = ZoneId.of("UTC");
-            Instant selectionInstant = Instant.ofEpochMilli(selection);
-            currentDeadline = LocalDateTime.ofInstant(selectionInstant, utcZone);
-
-            chooseDeadlineTime();
-        });
-
-        picker.show(getSupportFragmentManager(), MaterialDatePicker.class.getName());
-    }
-
-    private void chooseDeadlineTime() {
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        boolean isSystem24Hour = DateFormat.is24HourFormat(this);
-
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this, (view, hourOfDay, minute) -> {
-            currentDeadline = currentDeadline.withHour(hourOfDay).withMinute(minute);
-            displayDeadline();
-        }, currentDateTime.getHour(), currentDateTime.getMinute(), isSystem24Hour);
-
-        timePickerDialog.show();
+    private void displaySubtasks(@NonNull List<SubTask> subtasks) {
+        subTaskAdapter.setItems(subtasks);
     }
 
     private void createNewSubtask() {
@@ -197,7 +154,7 @@ public class TaskActivity extends BaseActivity implements SubTasksListener {
         String title = titleEditText.getText().toString();
         String description = descriptionEditText.getText().toString();
         boolean completed = completedCheckBox.isChecked();
-        LocalDateTime deadline = currentDeadline;
+        LocalDateTime deadline = deadlineDelegate.getDeadline();
 
         Task task = new Task(taskId, title, description, completed, deadline);
         List<SubTask> subtasks = subTaskAdapter.getItemsForSerialization();
