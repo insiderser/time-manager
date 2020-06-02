@@ -61,6 +61,10 @@ public class TaskActivity extends BaseActivity implements OnSubTaskListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
 
+        Intent intent = getIntent();
+        taskId = intent.getStringExtra(EXTRA_TASK_ID);
+        inEditMode = intent.getBooleanExtra(EXTRA_IN_EDIT_MODE, true);
+
         initViews();
         initData(savedInstanceState);
     }
@@ -87,6 +91,12 @@ public class TaskActivity extends BaseActivity implements OnSubTaskListener {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        // Disable everything editable if editing not allowed.
+        titleEditText.setFocusable(inEditMode);
+        descriptionEditText.setFocusable(inEditMode);
+        completedCheckBox.setEnabled(inEditMode);
+        dateButton.setEnabled(inEditMode);
     }
 
     private void initRecyclerView() {
@@ -99,18 +109,6 @@ public class TaskActivity extends BaseActivity implements OnSubTaskListener {
 
     private void initData(@Nullable Bundle savedInstanceState) {
         repository = new TasksRepository();
-
-        Intent intent = getIntent();
-        taskId = intent.getStringExtra(EXTRA_TASK_ID);
-        inEditMode = intent.getBooleanExtra(EXTRA_IN_EDIT_MODE, true);
-
-        if (!inEditMode) {
-            // Disable everything editable.
-            titleEditText.setFocusable(false);
-            descriptionEditText.setFocusable(false);
-            completedCheckBox.setEnabled(false);
-            dateButton.setEnabled(false);
-        }
 
         boolean viewingExistingTask = taskId != null;
         if (viewingExistingTask && savedInstanceState == null) {
