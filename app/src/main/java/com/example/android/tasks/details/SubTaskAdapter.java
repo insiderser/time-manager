@@ -1,5 +1,8 @@
 package com.example.android.tasks.details;
 
+import android.text.Editable;
+import android.text.Spanned;
+import android.text.style.StrikethroughSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +64,8 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskViewHolder> {
         private final EditText titleView;
         private final CheckBox completedCheckBox;
 
+        private final StrikethroughSpan strikethroughSpan = new StrikethroughSpan();
+
         SubTaskViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -76,6 +81,8 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskViewHolder> {
             completedCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 int position = getAdapterPosition();
                 listDelegate.setCompleted(position, isChecked);
+
+                updateTitleStrikeThrough(isChecked);
             });
 
             deleteButton.setOnClickListener(v -> {
@@ -94,6 +101,18 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskViewHolder> {
         void bind(SubTask subTask) {
             titleView.setText(subTask.getTitle());
             completedCheckBox.setChecked(subTask.isCompleted());
+
+            updateTitleStrikeThrough(subTask.isCompleted());
+        }
+
+        private void updateTitleStrikeThrough(boolean strikeThrough) {
+            Editable text = titleView.getText();
+
+            if (strikeThrough) {
+                text.setSpan(strikethroughSpan, 0, text.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            } else {
+                text.removeSpan(strikethroughSpan);
+            }
         }
     }
 }
