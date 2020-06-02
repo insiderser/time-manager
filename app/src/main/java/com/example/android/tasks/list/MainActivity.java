@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.android.tasks.R;
 import com.example.android.tasks.data.Task;
@@ -23,7 +22,6 @@ public class MainActivity extends BaseActivity implements OnTaskListener {
     public static final String EXTRA_IN_EDIT_MODE = "view_tasks_for_all_users";
     private static final boolean DEFAULT_EXTRA_IN_EDIT_MODE = true;
 
-    private RecyclerView tasksRecyclerView;
     private TasksAdapter tasksAdapter;
 
     private MainActivityViewModel viewModel;
@@ -52,8 +50,7 @@ public class MainActivity extends BaseActivity implements OnTaskListener {
     }
 
     private void initRecyclerView() {
-        tasksRecyclerView = findViewById(R.id.tasks_recycle_view);
-        tasksRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView tasksRecyclerView = findViewById(R.id.tasks_recycle_view);
 
         tasksAdapter = new TasksAdapter(this, inEditMode);
         tasksRecyclerView.setAdapter(tasksAdapter);

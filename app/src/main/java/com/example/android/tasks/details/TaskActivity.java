@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.android.tasks.R;
 import com.example.android.tasks.data.SubTask;
@@ -35,7 +34,6 @@ public class TaskActivity extends BaseActivity implements SubTasksListener {
     private View dateButton;
     private View addSubtaskButton;
 
-    private RecyclerView subtaskRecyclerView;
     private SubTaskAdapter subTaskAdapter;
 
     private TaskActivityViewModel viewModel;
@@ -70,6 +68,7 @@ public class TaskActivity extends BaseActivity implements SubTasksListener {
         addSubtaskButton = findViewById(R.id.subtask_add_btn);
 
         initRecyclerView();
+        updateEditability();
 
         completedCheckBox.setOnCheckedChangeListener((checkBox, isChecked) -> {
             if (inEditMode && isChecked) {
@@ -83,21 +82,21 @@ public class TaskActivity extends BaseActivity implements SubTasksListener {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+    }
 
-        // Disable everything editable if editing not allowed.
+    private void initRecyclerView() {
+        RecyclerView subtaskRecyclerView = findViewById(R.id.subtasks_recycle_view);
+
+        subTaskAdapter = new SubTaskAdapter(this, inEditMode);
+        subtaskRecyclerView.setAdapter(subTaskAdapter);
+    }
+
+    private void updateEditability() {
         titleEditText.setFocusable(inEditMode);
         descriptionEditText.setFocusable(inEditMode);
         completedCheckBox.setEnabled(inEditMode);
         dateButton.setEnabled(inEditMode);
         addSubtaskButton.setEnabled(inEditMode);
-    }
-
-    private void initRecyclerView() {
-        subtaskRecyclerView = findViewById(R.id.subtasks_recycle_view);
-        subtaskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        subTaskAdapter = new SubTaskAdapter(this, inEditMode);
-        subtaskRecyclerView.setAdapter(subTaskAdapter);
     }
 
     private void initData() {
