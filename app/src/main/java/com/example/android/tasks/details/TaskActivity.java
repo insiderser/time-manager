@@ -24,7 +24,6 @@ import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.CalendarConstraints.Builder;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import java.util.Collections;
 import java.util.List;
 import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDateTime;
@@ -32,7 +31,7 @@ import org.threeten.bp.ZoneId;
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.FormatStyle;
 
-public class TaskActivity extends BaseActivity implements OnSubTaskListener {
+public class TaskActivity extends BaseActivity implements SubTasksListener {
 
     public static final String EXTRA_TASK_ID = "task_id";
     public static final String EXTRA_IN_EDIT_MODE = "in_edit_mode";
@@ -87,7 +86,7 @@ public class TaskActivity extends BaseActivity implements OnSubTaskListener {
         });
 
         dateButton.setOnClickListener(v -> chooseDeadline());
-        addSubtaskButton.setOnClickListener(v -> addNewSubtask());
+        addSubtaskButton.setOnClickListener(v -> createNewSubtask());
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -111,8 +110,10 @@ public class TaskActivity extends BaseActivity implements OnSubTaskListener {
         repository = new TasksRepository();
 
         boolean viewingExistingTask = taskId != null;
-        if (viewingExistingTask && savedInstanceState == null) {
-            fetchTask();
+        if (viewingExistingTask) {
+            if (savedInstanceState == null) {
+                fetchTask();
+            }
             fetchSubtasks();
         }
     }
@@ -209,8 +210,8 @@ public class TaskActivity extends BaseActivity implements OnSubTaskListener {
         timePickerDialog.show();
     }
 
-    private void addNewSubtask() {
-        // TODO
+    private void createNewSubtask() {
+        subTaskAdapter.createNewSubtask();
     }
 
     private void saveTask() {
@@ -225,7 +226,7 @@ public class TaskActivity extends BaseActivity implements OnSubTaskListener {
         LocalDateTime deadline = currentDeadline;
 
         Task task = new Task(taskId, title, description, completed, deadline);
-        List<SubTask> subtasks = /*TODO*/ Collections.emptyList();
+        List<SubTask> subtasks = subTaskAdapter.getItemsForSerialization();
 
         repository.insertOrUpdateTask(task, subtasks);
     }
@@ -237,14 +238,22 @@ public class TaskActivity extends BaseActivity implements OnSubTaskListener {
     }
 
     @Override
-    public void onBackPressed() {
+    public void onSubTaskDeleteButtonClicked(@NonNull SubTask subTask) {
+        String subTaskId = subTask.getId();
+
+        if (taskId != null && subTaskId != null) {
+            repository.deleteSubtask(subTaskId, taskId);
+        }
+    }
+
+    @Override
+    protected void onStop() {
         saveTask();
-        super.onBackPressed();
+        super.onStop();
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        saveTask();
         finish();
         return true;
     }
@@ -262,15 +271,5 @@ public class TaskActivity extends BaseActivity implements OnSubTaskListener {
 
         currentDeadline = (LocalDateTime) savedInstanceState.getSerializable(KEY_CURRENT_DEADLINE);
         displayDeadline();
-    }
-
-    @Override
-    public void onSubTaskDeleteButtonClicked(@NonNull SubTask subTask) {
-        //TODO
-    }
-
-    @Override
-    public void onSubTaskChecked(@NonNull SubTask subTask, boolean isChecked) {
-        //TODO
     }
 }
