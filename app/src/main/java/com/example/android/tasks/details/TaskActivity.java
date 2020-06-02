@@ -12,13 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.android.tasks.R;
 import com.example.android.tasks.data.SubTask;
 import com.example.android.tasks.data.Task;
-import com.example.android.tasks.data.TasksRepository;
+import com.example.android.tasks.details.TaskActivityViewModel.Factory;
 import com.example.android.tasks.ui.BaseActivity;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.CalendarConstraints.Builder;
@@ -36,8 +36,6 @@ public class TaskActivity extends BaseActivity implements SubTasksListener {
     public static final String EXTRA_TASK_ID = "task_id";
     public static final String EXTRA_IN_EDIT_MODE = "in_edit_mode";
 
-    private static final String KEY_CURRENT_DEADLINE = "current_deadline";
-
     private EditText titleEditText;
     private EditText descriptionEditText;
     private CheckBox completedCheckBox;
@@ -48,9 +46,8 @@ public class TaskActivity extends BaseActivity implements SubTasksListener {
     private RecyclerView subtaskRecyclerView;
     private SubTaskAdapter subTaskAdapter;
 
-    private TasksRepository repository;
+    private TaskActivityViewModel viewModel;
 
-    private String taskId;
     private LocalDateTime currentDeadline;
 
     private boolean inEditMode;
@@ -61,11 +58,14 @@ public class TaskActivity extends BaseActivity implements SubTasksListener {
         setContentView(R.layout.activity_task);
 
         Intent intent = getIntent();
-        taskId = intent.getStringExtra(EXTRA_TASK_ID);
+        String taskId = intent.getStringExtra(EXTRA_TASK_ID);
         inEditMode = intent.getBooleanExtra(EXTRA_IN_EDIT_MODE, true);
 
+        ViewModelProvider.Factory viewModelFactory = new Factory(taskId);
+        viewModel = new ViewModelProvider(this, viewModelFactory).get(TaskActivityViewModel.class);
+
         initViews();
-        initData(savedInstanceState);
+        initData();
     }
 
     private void initViews() {
@@ -107,47 +107,20 @@ public class TaskActivity extends BaseActivity implements SubTasksListener {
         subtaskRecyclerView.setAdapter(subTaskAdapter);
     }
 
-    private void initData(@Nullable Bundle savedInstanceState) {
-        repository = new TasksRepository();
+    private void initData() {
+        LiveData<Task> taskLiveData = viewModel.getTask();
+        LiveData<List<SubTask>> subtasksLiveData = viewModel.getSubtasks();
 
-        boolean viewingExistingTask = taskId != null;
-        if (viewingExistingTask) {
-            if (savedInstanceState == null) {
-                fetchTask();
-            }
-            fetchSubtasks();
-        }
-    }
-
-    private void fetchTask() {
-        LiveData<Task> taskLiveData = repository.getTask(taskId);
-        taskLiveData.observe(this, new Observer<Task>() {
-            @Override
-            public void onChanged(Task task) {
-                if (task != null) {
-                    // Make sure we update UI only once,
-                    // so that we don't erase what a user has done.
-                    taskLiveData.removeObserver(this);
-
-                    currentDeadline = task.getDeadline();
-                    displayTask(task);
-                }
+        taskLiveData.observe(this, task -> {
+            if (task != null) {
+                currentDeadline = task.getDeadline();
+                displayTask(task);
             }
         });
-    }
 
-    private void fetchSubtasks() {
-        LiveData<List<SubTask>> subtasksLiveData = repository.getSubTasksForTask(taskId);
-        subtasksLiveData.observe(this, new Observer<List<SubTask>>() {
-            @Override
-            public void onChanged(List<SubTask> subtasks) {
-                if (subtasks != null) {
-                    // Make sure we update UI only once,
-                    // so that we don't erase what a user has done.
-                    subtasksLiveData.removeObserver(this);
-
-                    displaySubtasks(subtasks);
-                }
+        subtasksLiveData.observe(this, subtasks -> {
+            if (subtasks != null) {
+                displaySubtasks(subtasks);
             }
         });
     }
@@ -220,7 +193,7 @@ public class TaskActivity extends BaseActivity implements SubTasksListener {
             return;
         }
 
-        String taskId = this.taskId;
+        String taskId = viewModel.getTaskId();
         String title = titleEditText.getText().toString();
         String description = descriptionEditText.getText().toString();
         boolean completed = completedCheckBox.isChecked();
@@ -229,22 +202,18 @@ public class TaskActivity extends BaseActivity implements SubTasksListener {
         Task task = new Task(taskId, title, description, completed, deadline);
         List<SubTask> subtasks = subTaskAdapter.getItemsForSerialization();
 
-        repository.insertOrUpdateTask(task, subtasks);
+        viewModel.save(task, subtasks);
     }
 
     private void deleteTask() {
-        if (inEditMode && taskId != null) {
-            repository.deleteTask(taskId);
+        if (inEditMode) {
+            viewModel.deleteTask();
         }
     }
 
     @Override
     public void onSubTaskDeleteButtonClicked(@NonNull SubTask subTask) {
-        String subTaskId = subTask.getId();
-
-        if (taskId != null && subTaskId != null) {
-            repository.deleteSubtask(subTaskId, taskId);
-        }
+        viewModel.deleteSubtask(subTask);
     }
 
     @Override
@@ -257,20 +226,5 @@ public class TaskActivity extends BaseActivity implements SubTasksListener {
     public boolean onSupportNavigateUp() {
         finish();
         return true;
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putSerializable(KEY_CURRENT_DEADLINE, currentDeadline);
-
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        currentDeadline = (LocalDateTime) savedInstanceState.getSerializable(KEY_CURRENT_DEADLINE);
-        displayDeadline();
     }
 }
