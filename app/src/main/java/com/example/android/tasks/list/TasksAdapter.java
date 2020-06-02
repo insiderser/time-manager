@@ -10,16 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import com.example.android.tasks.R;
 import com.example.android.tasks.data.Task;
-import java.util.ArrayList;
 import java.util.List;
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.LocalDateTime;
 
 class TasksAdapter extends ListAdapter<ListItem, ViewHolder> {
 
     private static final int TYPE_DATE = 1;
     private static final int TYPE_TASK = 2;
 
+    private final ListItemsProcessor listItemsProcessor = new ListItemsProcessor();
     private final OnTaskListener onTaskListener;
     private final boolean inEditMode;
 
@@ -66,38 +64,13 @@ class TasksAdapter extends ListAdapter<ListItem, ViewHolder> {
     }
 
     void setItems(@Nullable List<Task> tasks) {
-        List<ListItem> items = tasks != null ? process(tasks) : null;
-        submitList(items);
-    }
-
-    private List<ListItem> process(@NonNull List<Task> tasks) {
-        List<ListItem> list = new ArrayList<>(tasks.size());
-
-        LocalDate previousDate = LocalDate.MIN;
-        for (Task task : tasks) {
-            LocalDate newDate;
-            LocalDateTime deadline = task.getDeadline();
-
-            if (deadline != null) {
-                newDate = deadline.toLocalDate();
-
-                if (previousDate == null || newDate.isAfter(previousDate)) {
-                    ListItem dateItem = new ListItem.Date(newDate);
-                    list.add(dateItem);
-
-                    previousDate = newDate;
-                }
-            } else if (previousDate != null) {
-                ListItem dateItem = new ListItem.Date(null);
-                list.add(dateItem);
-                previousDate = null;
-            }
-
-            ListItem taskItem = new ListItem.TaskItem(task);
-            list.add(taskItem);
+        if (tasks == null) {
+            // Fast path.
+            submitList(null);
+            return;
         }
 
-        return list;
+        listItemsProcessor.process(tasks, this::submitList);
     }
 
     @Override
