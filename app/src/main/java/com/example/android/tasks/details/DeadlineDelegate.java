@@ -16,6 +16,7 @@ import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.LocalTime;
 import org.threeten.bp.ZoneId;
+import org.threeten.bp.ZoneOffset;
 
 class DeadlineDelegate {
 
@@ -38,12 +39,17 @@ class DeadlineDelegate {
     }
 
     void chooseNewDeadline() {
+        LocalDateTime defaultDate = deadline != null ? deadline : LocalDateTime.now();
+        Instant defaultInstant = defaultDate.toInstant(ZoneOffset.UTC);
+        long defaultSelection = defaultInstant.toEpochMilli();
+
         CalendarConstraints constraints = new Builder()
             .setValidator(DateValidatorPointForward.now())
             .build();
 
         MaterialDatePicker<Long> picker = MaterialDatePicker.Builder.datePicker()
             .setCalendarConstraints(constraints)
+            .setSelection(defaultSelection)
             .build();
 
         picker.addOnPositiveButtonClickListener(selection -> {
@@ -64,10 +70,11 @@ class DeadlineDelegate {
         boolean isSystem24Hour = DateFormat.is24HourFormat(activity);
 
         TimePickerDialog timePickerDialog = new TimePickerDialog(activity, (view, hourOfDay, minute) -> {
+            LocalDateTime now = LocalDateTime.now();
             LocalTime newTime = LocalTime.of(hourOfDay, minute);
             LocalDateTime newDeadline = LocalDateTime.of(newDate, newTime);
 
-            if (newDeadline.isAfter(currentDateTime)) {
+            if (newDeadline.isAfter(now)) {
                 deadline = newDeadline;
                 onDeadlineChanged.accept(newDeadline);
             } else {
