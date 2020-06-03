@@ -20,15 +20,15 @@
 
     <string name="no_deadline">No deadline</string>
     <string name="add_new_task">Add new task</string>
+    <string name="view_scope_for_all_users">For all users</string>
+    <string name="view_scope_for_current_user">Your tasks</string>
+    <string name="sign_out">Sign out</string>
     <string name="is_task_completed">Is task completed?</string>
+    <string name="empty_list">It\'s empty here.\nTry adding new tasks.</string>
 
     <string name="title">Title</string>
     <string name="description">Description</string>
     <string name="choose_deadline">Click to choose deadline</string>
-
-    <string name="view_scope_for_all_users">For all users</string>
-    <string name="view_scope_for_current_user">Your tasks</string>
-    <string name="sign_out">Sign out</string>
     <string name="is_subtask_completed">Is subtask completed?</string>
     <string name="delete_subtask">Delete subtask</string>
     <string name="subtask_description">Subtask description</string>

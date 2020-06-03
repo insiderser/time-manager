@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
@@ -57,8 +58,15 @@ public class MainActivity extends BaseActivity implements OnTaskListener {
     }
 
     private void loadTasks() {
+        View emptyView = findViewById(R.id.empty_layout);
+
         LiveData<List<Task>> tasksLiveData = viewModel.getTasks();
-        tasksLiveData.observe(this, tasksAdapter::setItems);
+        tasksLiveData.observe(this, tasks -> {
+            tasksAdapter.setItems(tasks);
+
+            boolean showEmptyView = tasks != null && tasks.isEmpty();
+            emptyView.setVisibility(showEmptyView ? View.VISIBLE : View.GONE);
+        });
     }
 
     @Override
