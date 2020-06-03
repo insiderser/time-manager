@@ -59,6 +59,12 @@ class TaskActivityViewModel extends ViewModel {
         return taskId;
     }
 
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        repository.unregisterAllListeners();
+    }
+
     static class Factory implements ViewModelProvider.Factory {
 
         private final String taskId;

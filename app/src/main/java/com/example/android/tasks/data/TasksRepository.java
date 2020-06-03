@@ -13,9 +13,12 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.threeten.bp.LocalDateTime;
@@ -32,6 +35,8 @@ public class TasksRepository {
 
     private final FirebaseUserLiveData userLiveData = new FirebaseUserLiveData();
     private LiveData<List<Task>> currentUserTasks = null;
+
+    private final Collection<ListenerRegistration> registeredSnapshotListeners = new LinkedList<>();
 
     /**
      * Returns {@link LiveData} of all tasks for the current user.
@@ -95,7 +100,7 @@ public class TasksRepository {
     private LiveData<List<Task>> getTasksInternal(@NonNull Query query) {
         MutableLiveData<List<Task>> tasksLiveData = new MutableLiveData<>();
 
-        query.addSnapshotListener((snapshot, e) -> {
+        ListenerRegistration listener = query.addSnapshotListener((snapshot, e) -> {
             if (snapshot != null) {
                 List<Task> tasks = new ArrayList<>(snapshot.size());
 
@@ -110,6 +115,8 @@ public class TasksRepository {
                 tasksLiveData.setValue(null);
             }
         });
+
+        registeredSnapshotListeners.add(listener);
 
         return tasksLiveData;
     }
@@ -131,7 +138,7 @@ public class TasksRepository {
     private LiveData<Task> getTaskInternal(DocumentReference documentReference) {
         MutableLiveData<Task> taskLiveData = new MutableLiveData<>();
 
-        documentReference.addSnapshotListener((documentSnapshot, e) -> {
+        ListenerRegistration listener = documentReference.addSnapshotListener((documentSnapshot, e) -> {
             if (documentSnapshot != null && documentSnapshot.exists()) {
                 Task task = getTask(documentSnapshot);
                 taskLiveData.setValue(task);
@@ -140,6 +147,8 @@ public class TasksRepository {
                 taskLiveData.setValue(null);
             }
         });
+
+        registeredSnapshotListeners.add(listener);
 
         return taskLiveData;
     }
@@ -177,7 +186,7 @@ public class TasksRepository {
     private LiveData<List<SubTask>> getSubTasksInternal(Query query) {
         MutableLiveData<List<SubTask>> subTasksLiveData = new MutableLiveData<>();
 
-        query.addSnapshotListener((snapshot, e) -> {
+        ListenerRegistration listener = query.addSnapshotListener((snapshot, e) -> {
             if (snapshot != null) {
                 List<SubTask> subTasks = new ArrayList<>(snapshot.size());
 
@@ -192,6 +201,8 @@ public class TasksRepository {
                 subTasksLiveData.setValue(null);
             }
         });
+
+        registeredSnapshotListeners.add(listener);
 
         return subTasksLiveData;
     }
@@ -361,6 +372,13 @@ public class TasksRepository {
                     Log.w(TAG, "Failed to delete " + documentType, e);
                 }
             });
+    }
+
+    public void unregisterAllListeners() {
+        for (ListenerRegistration listener : registeredSnapshotListeners) {
+            listener.remove();
+        }
+        registeredSnapshotListeners.clear();
     }
 
     private static final class TaskContract {

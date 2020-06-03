@@ -30,6 +30,12 @@ class MainActivityViewModel extends ViewModel {
         repository.deleteTask(taskId);
     }
 
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        repository.unregisterAllListeners();
+    }
+
     static class Factory implements ViewModelProvider.Factory {
 
         private final boolean inEditMode;
