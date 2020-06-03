@@ -54,6 +54,4 @@ dependencies {
 
     // Backport of Java 8 Time API
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.4'
-
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.3'
 }
