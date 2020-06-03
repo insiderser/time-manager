@@ -13,6 +13,12 @@ import com.google.firebase.firestore.util.Util;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A container class for {@link TaskActivity} that holds stuff
+ * that we want them to live beyond a lifetime of a single activity.
+ *
+ * @see ViewModel
+ */
 class TaskActivityViewModel extends ViewModel {
 
     private final String taskId;

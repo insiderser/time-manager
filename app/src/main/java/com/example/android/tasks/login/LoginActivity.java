@@ -15,6 +15,10 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
+/**
+ * Allows users to sign in/up with email or Google.
+ * Supports password reset.
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_GOOGLE_SIGN_IN = 4994;
@@ -49,21 +53,13 @@ public class LoginActivity extends AppCompatActivity {
             startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE_SIGN_IN);
         });
 
-        emailSignInButton.setOnClickListener(v -> {
-            tryEmailSignIn(false);
-        });
-
-        emailSignUpButton.setOnClickListener(v -> {
-            tryEmailSignIn(true);
-        });
+        emailSignInButton.setOnClickListener(v -> tryEmailSignIn(false));
+        emailSignUpButton.setOnClickListener(v -> tryEmailSignIn(true));
+        forgotPasswordView.setOnClickListener(v -> resetPassword());
 
         passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
             tryEmailSignIn(false);
             return true;
-        });
-
-        forgotPasswordView.setOnClickListener(v -> {
-            resetPassword();
         });
 
         FirebaseUserLiveData userLiveData = new FirebaseUserLiveData();

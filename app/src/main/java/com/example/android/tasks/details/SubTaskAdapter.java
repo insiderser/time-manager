@@ -16,6 +16,9 @@ import com.example.android.tasks.details.SubTaskAdapter.SubTaskViewHolder;
 import com.example.android.tasks.utils.SimpleTextWatcher;
 import java.util.List;
 
+/**
+ * {@link RecyclerView.Adapter} displaying a list of subtasks.
+ */
 public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskViewHolder> {
 
     private final SubtasksListDelegate listDelegate = new SubtasksListDelegate(this);

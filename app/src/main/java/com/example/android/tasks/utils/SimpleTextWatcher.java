@@ -2,6 +2,10 @@ package com.example.android.tasks.utils;
 
 import android.text.TextWatcher;
 
+/**
+ * Listener for changes of text in {@link android.widget.EditText} with default no-op
+ * implementation of methods that aren't usually needed.
+ */
 @FunctionalInterface
 public interface SimpleTextWatcher extends TextWatcher {
 

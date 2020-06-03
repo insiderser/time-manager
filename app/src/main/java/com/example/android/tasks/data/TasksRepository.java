@@ -24,7 +24,9 @@ import java.util.Map;
 import org.threeten.bp.LocalDateTime;
 
 /**
- * Repository that manages tasks. Here, you can retrieve, add or update tasks.
+ * Repository that manages tasks. Here, you can retrieve, add, update or delete tasks & subtasks.
+ * <p>
+ * After you finished with {@link TasksRepository}, call {@link #unregisterAllListeners()}.
  */
 public class TasksRepository {
 
@@ -105,7 +107,7 @@ public class TasksRepository {
                 List<Task> tasks = new ArrayList<>(snapshot.size());
 
                 for (DocumentSnapshot document : snapshot) {
-                    Task task = getTask(document);
+                    Task task = parseTask(document);
                     tasks.add(task);
                 }
 
@@ -140,7 +142,7 @@ public class TasksRepository {
 
         ListenerRegistration listener = documentReference.addSnapshotListener((documentSnapshot, e) -> {
             if (documentSnapshot != null && documentSnapshot.exists()) {
-                Task task = getTask(documentSnapshot);
+                Task task = parseTask(documentSnapshot);
                 taskLiveData.setValue(task);
             } else {
                 Log.w(TAG, "Error getting task " + documentReference.getId(), e);
@@ -155,7 +157,7 @@ public class TasksRepository {
 
     @NonNull
     @SuppressWarnings("ConstantConditions")
-    private static Task getTask(@NonNull DocumentSnapshot taskSnapshot) {
+    private static Task parseTask(@NonNull DocumentSnapshot taskSnapshot) {
         String id = taskSnapshot.getId();
         String title = taskSnapshot.get(TaskContract.TITLE, String.class);
         String description = taskSnapshot.get(TaskContract.DESCRIPTION, String.class);
@@ -182,6 +184,9 @@ public class TasksRepository {
         return getSubTasksInternal(query);
     }
 
+    /**
+     * Retrieves observable list of subtasks from given {@link Query}.
+     */
     @NonNull
     private LiveData<List<SubTask>> getSubTasksInternal(Query query) {
         MutableLiveData<List<SubTask>> subTasksLiveData = new MutableLiveData<>();
@@ -191,7 +196,7 @@ public class TasksRepository {
                 List<SubTask> subTasks = new ArrayList<>(snapshot.size());
 
                 for (DocumentSnapshot document : snapshot) {
-                    SubTask subTask = getSubTask(document);
+                    SubTask subTask = parseSubTask(document);
                     subTasks.add(subTask);
                 }
 
@@ -209,7 +214,7 @@ public class TasksRepository {
 
     @NonNull
     @SuppressWarnings("ConstantConditions")
-    private static SubTask getSubTask(@NonNull DocumentSnapshot document) {
+    private static SubTask parseSubTask(@NonNull DocumentSnapshot document) {
         String id = document.getId();
         String title = document.get(SubtaskContract.TITLE, String.class);
         boolean completed = document.get(SubtaskContract.COMPLETED, Boolean.TYPE);
@@ -374,6 +379,12 @@ public class TasksRepository {
             });
     }
 
+    /**
+     * Unregisters all previously registered listeners for changes in Firestore.
+     * <p>
+     * <b>Must be called</b> to save battery & bandwidth usage.
+     * Firebase won't unregister them for us.
+     */
     public void unregisterAllListeners() {
         for (ListenerRegistration listener : registeredSnapshotListeners) {
             listener.remove();

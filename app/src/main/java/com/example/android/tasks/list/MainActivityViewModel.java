@@ -8,6 +8,12 @@ import com.example.android.tasks.data.Task;
 import com.example.android.tasks.data.TasksRepository;
 import java.util.List;
 
+/**
+ * A container class for {@link MainActivity} that holds stuff
+ * that we want them to live beyond a lifetime of a single activity.
+ *
+ * @see ViewModel
+ */
 class MainActivityViewModel extends ViewModel {
 
     private final TasksRepository repository = new TasksRepository();

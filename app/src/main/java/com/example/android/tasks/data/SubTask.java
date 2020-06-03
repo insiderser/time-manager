@@ -6,6 +6,8 @@ import java.util.Objects;
 
 /**
  * Model class that represents a single subtask of a task.
+ * <p>
+ * {@code null} {@link #id} indicates that this Task doesn't have any ID.
  */
 public class SubTask {
 

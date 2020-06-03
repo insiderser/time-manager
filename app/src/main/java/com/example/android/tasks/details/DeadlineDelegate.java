@@ -18,6 +18,9 @@ import org.threeten.bp.LocalTime;
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZoneOffset;
 
+/**
+ * Delegate class for managing everything regarding deadlines.
+ */
 class DeadlineDelegate {
 
     private final FragmentActivity activity;
@@ -38,6 +41,9 @@ class DeadlineDelegate {
         this.deadline = deadline;
     }
 
+    /**
+     * Launches flow to let user choose new deadline date.
+     */
     void chooseNewDeadline() {
         LocalDateTime defaultDate = deadline != null ? deadline : LocalDateTime.now();
         Instant defaultInstant = defaultDate.toInstant(ZoneOffset.UTC);

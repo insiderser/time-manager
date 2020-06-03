@@ -12,6 +12,17 @@ import com.example.android.tasks.R;
 import com.example.android.tasks.data.Task;
 import java.util.List;
 
+/**
+ * {@link RecyclerView.Adapter} that displays a list of tasks, dividing them based on deadlines.
+ * <p>
+ * This adapter can show 2 separate view types: date & task.
+ * To support that, we represent items as {@link ListItem} class that has 2 subclasses:
+ * {@link ListItem.Date} and {@link ListItem.TaskItem}.
+ * When a list of tasks is submitted, we process it (on a background thread)
+ * to find where deadline date changes and insert {@link ListItem.Date} there.
+ * <p>
+ * Also it supports 2 separate states: editable & read-only.
+ */
 class TasksAdapter extends ListAdapter<ListItem, ViewHolder> {
 
     private static final int TYPE_DATE = 1;
@@ -21,6 +32,10 @@ class TasksAdapter extends ListAdapter<ListItem, ViewHolder> {
     private final OnTaskListener onTaskListener;
     private final boolean inEditMode;
 
+    /**
+     * @param inEditMode If {@code false}, tasks will be read-only, otherwise fully editable
+     * (e.g. the user can toggle "completed" flag).
+     */
     TasksAdapter(@NonNull OnTaskListener onTaskListener, boolean inEditMode) {
         super(new ListItemDiffCallback());
 

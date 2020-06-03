@@ -18,6 +18,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import java.util.List;
 
+/**
+ * Activity that displays a list of tasks. Can show either tasks of the current user
+ * or all tasks (of all users). When showing tasks of all users, editing is prohibited.
+ */
 public class MainActivity extends BaseActivity implements OnTaskListener {
 
     public static final String EXTRA_IN_EDIT_MODE = "view_tasks_for_all_users";
@@ -118,6 +122,9 @@ public class MainActivity extends BaseActivity implements OnTaskListener {
         }
     }
 
+    /**
+     * Toggles between viewing tasks of a current user & tasks of all users.
+     */
     private void toggleViewScope() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(EXTRA_IN_EDIT_MODE, !inEditMode);

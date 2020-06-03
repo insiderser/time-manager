@@ -10,15 +10,23 @@ import java.util.List;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
 
+/**
+ * A class to process a list of tasks.
+ */
 class ListItemsProcessor {
 
     private final BackgroundExecutor backgroundExecutor = BackgroundExecutor.getInstance();
     private final MainThreadExecutor mainExecutor = new MainThreadExecutor();
 
     /**
+     * Process given list of tasks on a background thread to find
+     * where {@link ListItem.Date} items should be amid all tasks.
+     *
      * @param consumer Will be called on a main thread.
+     * @implNote It processes all tasks, finds where deadline date changes,
+     * and puts {@link ListItem.Date} there.
      */
-    void process(@NonNull List<Task> tasks, @NonNull Consumer<List<ListItem>> consumer) {
+    void process(@NonNull List<Task> tasks, @NonNull Consumer<? super List<ListItem>> consumer) {
         backgroundExecutor.execute(() -> {
             List<ListItem> processed = process(tasks);
 

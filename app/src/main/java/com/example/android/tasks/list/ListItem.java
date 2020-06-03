@@ -6,6 +6,9 @@ import com.example.android.tasks.data.Task;
 import java.util.Objects;
 import org.threeten.bp.LocalDate;
 
+/**
+ * A sealed class to represent items in {@link TasksAdapter}.
+ */
 abstract class ListItem {
 
     private ListItem() {

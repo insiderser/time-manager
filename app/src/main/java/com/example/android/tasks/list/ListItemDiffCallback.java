@@ -3,6 +3,9 @@ package com.example.android.tasks.list;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
+/**
+ * A {@link DiffUtil.ItemCallback} that compares {@link ListItem}s.
+ */
 class ListItemDiffCallback extends DiffUtil.ItemCallback<ListItem> {
 
     @Override

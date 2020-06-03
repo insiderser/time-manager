@@ -22,10 +22,21 @@ import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.FormatStyle;
 
+/**
+ * Activity that shows details of a task (description, subtasks, etc.).
+ * <p>
+ * ID of the task to display must be passed as intent extra (see {@link #EXTRA_TASK_ID}).
+ * Otherwise, {@link TaskActivity} will assume that you want to create a new task.
+ * <p>
+ * By default, task will be editable. To open in view-only mode, set {@link #EXTRA_IN_EDIT_MODE}
+ * to {@code false}.
+ */
 public class TaskActivity extends BaseActivity implements SubTasksListener {
 
     public static final String EXTRA_TASK_ID = "task_id";
     public static final String EXTRA_IN_EDIT_MODE = "in_edit_mode";
+
+    private static final boolean DEFAULT_IN_EDIT_MODE = true;
 
     private EditText titleEditText;
     private EditText descriptionEditText;
@@ -48,7 +59,7 @@ public class TaskActivity extends BaseActivity implements SubTasksListener {
 
         Intent intent = getIntent();
         String taskId = intent.getStringExtra(EXTRA_TASK_ID);
-        inEditMode = intent.getBooleanExtra(EXTRA_IN_EDIT_MODE, true);
+        inEditMode = intent.getBooleanExtra(EXTRA_IN_EDIT_MODE, DEFAULT_IN_EDIT_MODE);
 
         ViewModelProvider.Factory viewModelFactory = new Factory(taskId);
         viewModel = new ViewModelProvider(this, viewModelFactory).get(TaskActivityViewModel.class);
