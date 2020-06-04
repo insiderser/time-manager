@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.android.tasks.R;
@@ -121,9 +122,16 @@ public class TaskActivity extends BaseActivity implements SubTasksListener {
             }
         });
 
-        subtasksLiveData.observe(this, subtasks -> {
-            if (subtasks != null) {
-                displaySubtasks(subtasks);
+        subtasksLiveData.observe(this, new Observer<List<SubTask>>() {
+            @Override
+            public void onChanged(List<SubTask> subtasks) {
+                if (subtasks != null) {
+                    // Make sure we update subtasks list only once,
+                    // so that we don't erase what the user has done.
+                    subtasksLiveData.removeObserver(this);
+
+                    displaySubtasks(subtasks);
+                }
             }
         });
     }
